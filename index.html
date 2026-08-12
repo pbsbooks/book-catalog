@@ -416,7 +416,7 @@
     <header class="hero">
         <img src="logo.png" alt="Pinnah Book Store Logo" class="hero-logo" onerror="this.style.display='none'">
         <h1 data-en="The Ultimate Digital Archive" data-am="የመጨረሻው ዲጂታል ማህደር">The Ultimate Digital Archive</h1>
-        <p data-en="Select a category below or search across 15,000+ texts instantly." data-am="ከዚህ በታች ምድብ ይምረጡ ወይም መጻሕፍትን ይፈልጉ።">Select a category below or search across 15,000+ texts instantly.</p>
+        <p data-en="Select a category below or search across your library instantly." data-am="ከዚህ በታች ምድብ ይምረጡ ወይም መጻሕፍትን ይፈልጉ።">Select a category below or search across your library instantly.</p>
         
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -425,40 +425,35 @@
     </header>
 
     <main class="container" id="mainContent">
-        <!-- Dynamic content injected via JavaScript -->
         <div class="loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading archive...</div>
     </main>
 
     <script>
-        // --- Configuration ---
         const TELEGRAM_CONTACT = "YOUR_USERNAME_OR_GROUP";
         const BOOKS_PER_PAGE = 24;
         
-        // --- State ---
         let allBooks = [];
         let filteredBooks = [];
-        let currentView = 'categories'; // 'categories' | 'catalog' | 'search'
+        let currentView = 'categories';
         let selectedCategory = '';
         let currentPage = 1;
         let isAmharic = false;
         let searchTimeout;
 
-        // --- Core Initialization ---
         async function initApp() {
             try {
                 const response = await fetch('catalog.json');
                 const rawData = await response.json();
                 
-                // Universal normalization: supports short keys (t, a, c, i) and full keys (title, author, category, image)
+                // Robust normalization supporting all common JSON key variations for categories, titles, authors, and images
                 allBooks = rawData.map((b, index) => {
                     const id = b.id || index + 1;
                     return {
                         id: id,
-                        title: b.title || b.t || `Book #${id}`,
-                        author: b.author || b.a || 'Unknown Author',
-                        category: b.category || b.c || 'General Archive',
-                        category_am: b.category_am || b.c_am || '',
-                        image: b.image || b.cover || b.i || `covers/${id}.webp`
+                        title: b.title || b.Title || b.t || b.name || `Book #${id}`,
+                        author: b.author || b.Author || b.a || b.writer || 'Unknown Author',
+                        category: b.category || b.Category || b.c || b.cat || b.genre || b.subject || 'General Archive',
+                        image: b.image || b.Image || b.cover || b.Cover || b.i || `covers/${id}.webp`
                     };
                 });
 
@@ -467,12 +462,11 @@
                 document.getElementById('mainContent').innerHTML = `
                     <div class="loader" style="color: #ef4444;">
                         <i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.<br>
-                        <span style="font-size:0.9rem; color:var(--text-muted);">Ensure catalog.json is in the same folder and your python server is running.</span>
+                        <span style="font-size:0.9rem; color:var::text-muted;">Ensure catalog.json is in the same folder and your python server is running.</span>
                     </div>`;
             }
         }
 
-        // --- View Router ---
         function renderView() {
             if (currentView === 'categories') {
                 renderCategoriesView();
@@ -481,11 +475,9 @@
             }
         }
 
-        // --- 1. Categories View ---
         function renderCategoriesView() {
             const container = document.getElementById('mainContent');
             
-            // Group books and count categories
             const categoryMap = {};
             allBooks.forEach(book => {
                 const cat = book.category;
@@ -503,7 +495,7 @@
 
             for (const [cat, count] of Object.entries(categoryMap)) {
                 html += `
-                    <div class="category-card" onclick="selectCategory('${cat}')">
+                    <div class="category-card" onclick="selectCategory('${cat.replace(/'/g, "\\'")}')">
                         <div class="category-icon"><i class="fa-solid fa-book-open"></i></div>
                         <div class="category-name">${cat}</div>
                         <div class="category-count">${count.toLocaleString()} ${isAmharic ? 'መጻሕፍት' : 'Books'}</div>
@@ -515,7 +507,6 @@
             container.innerHTML = html;
         }
 
-        // --- 2. Catalog Grid View ---
         function renderCatalogView() {
             const container = document.getElementById('mainContent');
             const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
@@ -563,7 +554,6 @@
             });
             html += `</div>`;
 
-            // Pagination Controls
             if (totalPages > 1) {
                 html += `
                     <div class="pagination">
@@ -581,7 +571,6 @@
             container.innerHTML = html;
         }
 
-        // --- Interaction Handlers ---
         function selectCategory(categoryName) {
             selectedCategory = categoryName;
             currentView = 'catalog';
