@@ -474,6 +474,36 @@
             margin-bottom: 1rem;
         }
 
+        .modal-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.8rem;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.6rem;
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
         .modal-description {
             text-align: left;
             line-height: 1.7;
@@ -496,7 +526,7 @@
         </a>
         <div class="nav-actions">
             <button class="btn-outline" id="langToggle" onclick="toggleLang()">🌐 አማርኛ</button>
-            <a href="https://t.me/YOUR_CHANNEL" target="_blank" class="btn-outline" style="background: var(--primary); color: white;">Join Channel</a>
+            <a href="https://t.me/pinnah_book_store_1" target="_blank" class="btn-outline" style="background: var(--primary); color: white;">Join Channel</a>
         </div>
     </nav>
 
@@ -522,13 +552,14 @@
             <img id="modalCover" class="modal-cover" src="" alt="Book Cover">
             <h2 id="modalTitle" class="modal-title"></h2>
             <div id="modalAuthor" class="modal-author"></div>
+            <div id="modalMeta" class="modal-meta"></div>
             <div id="modalDescription" class="modal-description"></div>
-            <a id="modalOrderBtn" href="#" target="_blank" class="btn-order" style="width:auto; padding: 0.75rem 2rem;">Request File</a>
+            <a id="modalOrderBtn" href="#" target="_blank" class="btn-order" style="width:auto; padding: 0.75rem 2rem;">Buy Now</a>
         </div>
     </div>
 
     <script>
-        const TELEGRAM_CONTACT = "YOUR_USERNAME_OR_GROUP";
+        const TELEGRAM_CONTACT = "PBSA001"; // Your Telegram username (without @)
         const BOOKS_PER_PAGE = 24;
         
         let allBooks = [];
@@ -554,7 +585,13 @@
                         author: b.author || b.Author || b.a || b.writer || 'Unknown Author',
                         category: b.category || b.Category || b.c || b.cat || b.genre || b.subject || 'General Archive',
                         image: b.image || b.Image || b.cover || b.Cover || b.i || `covers/${id}.webp`,
-                        description: b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || 'No description available.'
+                        description: b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || 'No description available.',
+                        language: b.language || b.Language || b.lang || b.Lang || 'N/A',
+                        format: b.format || b.Format || b.type || b.Type || b.file_type || b.fileType || b.extension || b.ext || 'N/A',
+                        pages: b.pages || b.Pages || b.page_count || b.pageCount || b.num_pages || b.numPages || 'N/A',
+                        year: b.year || b.Year || b.publication_year || b.publicationYear || b.pub_year || b.pubYear || b.date || b.published || 'N/A',
+                        publisher: b.publisher || b.Publisher || b.pub || b.publisher_name || 'N/A',
+                        isbn: b.isbn || b.ISBN || b.Isbn || 'N/A'
                     };
                 });
 
@@ -643,9 +680,22 @@
 
             html += `<div class="book-grid">`;
             booksToShow.forEach(book => {
-                const message = encodeURIComponent(`Hello, I would like to request the file for: ${book.title} (ID: ${book.id})`);
+                const message = encodeURIComponent(
+                    `📚 New Order Request\n\n` +
+                    `Title: ${book.title}\n` +
+                    `Author: ${book.author}\n` +
+                    `ID: ${book.id}\n` +
+                    `Category: ${book.category}\n` +
+                    `Format: ${book.format || 'N/A'}\n` +
+                    `Language: ${book.language || 'N/A'}\n` +
+                    `Pages: ${book.pages || 'N/A'}\n` +
+                    `Year: ${book.year || 'N/A'}\n` +
+                    `Publisher: ${book.publisher || 'N/A'}\n` +
+                    `ISBN: ${book.isbn || 'N/A'}\n\n` +
+                    `I want to purchase this book. Please send me the file.`
+                );
                 const tgLink = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
-                const orderText = isAmharic ? 'ይህን ፋይል ይጠይቁ' : 'Request File';
+                const orderText = isAmharic ? 'ግዛ' : 'Buy Now';
                 const safeImage = encodeURI(book.image);
 
                 html += `
@@ -759,7 +809,36 @@
             document.getElementById('modalAuthor').innerText = (isAmharic ? 'በ' : 'by') + ' ' + book.author + ' · ' + book.category;
             document.getElementById('modalDescription').innerText = book.description || (isAmharic ? 'ዝርዝር መግለጫ የለም።' : 'No description available.');
 
-            const message = encodeURIComponent(`Hello, I would like to request the file for: ${book.title} (ID: ${book.id})`);
+            const metaItems = [
+                { label: isAmharic ? 'ቋንቋ' : 'Language', value: book.language },
+                { label: isAmharic ? 'ቅርጸት' : 'Format', value: book.format },
+                { label: isAmharic ? 'ገጾች' : 'Pages', value: book.pages },
+                { label: isAmharic ? 'ዓመት' : 'Year', value: book.year },
+                { label: isAmharic ? 'አሳታሚ' : 'Publisher', value: book.publisher },
+                { label: 'ISBN', value: book.isbn }
+            ];
+
+            document.getElementById('modalMeta').innerHTML = metaItems.map(item => `
+                <div class="meta-item">
+                    <div class="meta-label">${item.label}</div>
+                    <div class="meta-value">${item.value || 'N/A'}</div>
+                </div>
+            `).join('');
+
+            const message = encodeURIComponent(
+                `📚 New Order Request\n\n` +
+                `Title: ${book.title}\n` +
+                `Author: ${book.author}\n` +
+                `ID: ${book.id}\n` +
+                `Category: ${book.category}\n` +
+                `Format: ${book.format || 'N/A'}\n` +
+                `Language: ${book.language || 'N/A'}\n` +
+                `Pages: ${book.pages || 'N/A'}\n` +
+                `Year: ${book.year || 'N/A'}\n` +
+                `Publisher: ${book.publisher || 'N/A'}\n` +
+                `ISBN: ${book.isbn || 'N/A'}\n\n` +
+                `I want to purchase this book. Please send me the file.`
+            );
             document.getElementById('modalOrderBtn').href = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
 
             document.getElementById('bookModal').classList.add('active');
