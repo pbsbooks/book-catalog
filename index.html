@@ -560,6 +560,7 @@
 
     <script>
         const TELEGRAM_CONTACT = "PBSA001"; // Your Telegram username (without @)
+        const CHANNEL_URL = "https://t.me/pinnah_book_store_1";
         const BOOKS_PER_PAGE = 24;
         
         let allBooks = [];
@@ -570,6 +571,22 @@
         let currentPage = 1;
         let isAmharic = false;
         let searchTimeout;
+
+        // Helper to format page numbers as integer (removes .0)
+        function formatPages(value) {
+            if (value === null || value === undefined || value === '') return 'N/A';
+            const num = Number(value);
+            if (!isNaN(num) && Number.isInteger(num)) return num.toString();
+            if (!isNaN(num)) return Math.round(num).toString(); // fallback: round to nearest integer
+            return value.toString();
+        }
+
+        // Helper to build Telegram share link (more reliable than direct ?text=)
+        function buildTelegramLink(message) {
+            const encodedText = encodeURIComponent(message);
+            const encodedUrl = encodeURIComponent(CHANNEL_URL);
+            return `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+        }
 
         async function initApp() {
             try {
@@ -585,13 +602,12 @@
                         author: b.author || b.Author || b.a || b.writer || 'Unknown Author',
                         category: b.category || b.Category || b.c || b.cat || b.genre || b.subject || 'General Archive',
                         image: b.image || b.Image || b.cover || b.Cover || b.i || `covers/${id}.webp`,
-                        description: b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || 'No description available.',
+                        description: b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || '',
                         language: b.language || b.Language || b.lang || b.Lang || 'N/A',
                         format: b.format || b.Format || b.type || b.Type || b.file_type || b.fileType || b.extension || b.ext || 'N/A',
                         pages: b.pages || b.Pages || b.page_count || b.pageCount || b.num_pages || b.numPages || 'N/A',
                         year: b.year || b.Year || b.publication_year || b.publicationYear || b.pub_year || b.pubYear || b.date || b.published || 'N/A',
-                        publisher: b.publisher || b.Publisher || b.pub || b.publisher_name || 'N/A',
-                        isbn: b.isbn || b.ISBN || b.Isbn || 'N/A'
+                        price: b.price || b.Price || b.cost || b.Cost || b.sale_price || b.salePrice || b.price_ETB || b.priceETB || 'N/A'
                     };
                 });
 
@@ -680,7 +696,7 @@
 
             html += `<div class="book-grid">`;
             booksToShow.forEach(book => {
-                const message = encodeURIComponent(
+                const message = 
                     `📚 New Order Request\n\n` +
                     `Title: ${book.title}\n` +
                     `Author: ${book.author}\n` +
@@ -688,13 +704,11 @@
                     `Category: ${book.category}\n` +
                     `Format: ${book.format || 'N/A'}\n` +
                     `Language: ${book.language || 'N/A'}\n` +
-                    `Pages: ${book.pages || 'N/A'}\n` +
+                    `Pages: ${formatPages(book.pages)}\n` +
                     `Year: ${book.year || 'N/A'}\n` +
-                    `Publisher: ${book.publisher || 'N/A'}\n` +
-                    `ISBN: ${book.isbn || 'N/A'}\n\n` +
-                    `I want to purchase this book. Please send me the file.`
-                );
-                const tgLink = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
+                    `Price: ${book.price || 'N/A'}\n\n` +
+                    `I want to purchase this book. Please send me the file.`;
+                const tgLink = buildTelegramLink(message);
                 const orderText = isAmharic ? 'ግዛ' : 'Buy Now';
                 const safeImage = encodeURI(book.image);
 
@@ -807,15 +821,24 @@
             document.getElementById('modalCover').src = book.image;
             document.getElementById('modalTitle').innerText = book.title;
             document.getElementById('modalAuthor').innerText = (isAmharic ? 'በ' : 'by') + ' ' + book.author + ' · ' + book.category;
-            document.getElementById('modalDescription').innerText = book.description || (isAmharic ? 'ዝርዝር መግለጫ የለም።' : 'No description available.');
 
+            // Handle description visibility
+            const descEl = document.getElementById('modalDescription');
+            if (book.description && book.description.trim() !== '') {
+                descEl.innerText = book.description;
+                descEl.style.display = 'block';
+            } else {
+                descEl.innerText = '';
+                descEl.style.display = 'none';
+            }
+
+            // Metadata items: Language, Format, Pages, Year, Price
             const metaItems = [
                 { label: isAmharic ? 'ቋንቋ' : 'Language', value: book.language },
                 { label: isAmharic ? 'ቅርጸት' : 'Format', value: book.format },
-                { label: isAmharic ? 'ገጾች' : 'Pages', value: book.pages },
+                { label: isAmharic ? 'ገጾች' : 'Pages', value: formatPages(book.pages) },
                 { label: isAmharic ? 'ዓመት' : 'Year', value: book.year },
-                { label: isAmharic ? 'አሳታሚ' : 'Publisher', value: book.publisher },
-                { label: 'ISBN', value: book.isbn }
+                { label: isAmharic ? 'ዋጋ' : 'Price', value: book.price }
             ];
 
             document.getElementById('modalMeta').innerHTML = metaItems.map(item => `
@@ -825,7 +848,7 @@
                 </div>
             `).join('');
 
-            const message = encodeURIComponent(
+            const message = 
                 `📚 New Order Request\n\n` +
                 `Title: ${book.title}\n` +
                 `Author: ${book.author}\n` +
@@ -833,13 +856,12 @@
                 `Category: ${book.category}\n` +
                 `Format: ${book.format || 'N/A'}\n` +
                 `Language: ${book.language || 'N/A'}\n` +
-                `Pages: ${book.pages || 'N/A'}\n` +
+                `Pages: ${formatPages(book.pages)}\n` +
                 `Year: ${book.year || 'N/A'}\n` +
-                `Publisher: ${book.publisher || 'N/A'}\n` +
-                `ISBN: ${book.isbn || 'N/A'}\n\n` +
-                `I want to purchase this book. Please send me the file.`
-            );
-            document.getElementById('modalOrderBtn').href = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
+                `Price: ${book.price || 'N/A'}\n\n` +
+                `I want to purchase this book. Please send me the file.`;
+
+            document.getElementById('modalOrderBtn').href = buildTelegramLink(message);
 
             document.getElementById('bookModal').classList.add('active');
             document.body.style.overflow = 'hidden';
