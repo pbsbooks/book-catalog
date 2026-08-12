@@ -434,6 +434,7 @@
         
         let allBooks = [];
         let filteredBooks = [];
+        let categoryMap = {};
         let currentView = 'categories';
         let selectedCategory = '';
         let currentPage = 1;
@@ -445,7 +446,7 @@
                 const response = await fetch('catalog.json');
                 const rawData = await response.json();
                 
-                // Robust normalization supporting all common JSON key variations for categories, titles, authors, and images
+                // Robust normalization supporting all common JSON key variations
                 allBooks = rawData.map((b, index) => {
                     const id = b.id || index + 1;
                     return {
@@ -457,12 +458,20 @@
                     };
                 });
 
+                // Pre-calculate category counts once for optimal performance
+                categoryMap = {};
+                allBooks.forEach(book => {
+                    const cat = book.category;
+                    if (!categoryMap[cat]) categoryMap[cat] = 0;
+                    categoryMap[cat]++;
+                });
+
                 renderView();
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `
                     <div class="loader" style="color: #ef4444;">
                         <i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.<br>
-                        <span style="font-size:0.9rem; color:var::text-muted;">Ensure catalog.json is in the same folder and your python server is running.</span>
+                        <span style="font-size:0.9rem; color:var(--text-muted);">Ensure catalog.json is in the same folder and your local server is running.</span>
                     </div>`;
             }
         }
@@ -478,13 +487,6 @@
         function renderCategoriesView() {
             const container = document.getElementById('mainContent');
             
-            const categoryMap = {};
-            allBooks.forEach(book => {
-                const cat = book.category;
-                if (!categoryMap[cat]) categoryMap[cat] = 0;
-                categoryMap[cat]++;
-            });
-
             let html = `
                 <div class="section-header">
                     <h2>${isAmharic ? 'የመጽሐፍ ምድቦች' : 'Browse Categories'}</h2>
@@ -495,7 +497,7 @@
 
             for (const [cat, count] of Object.entries(categoryMap)) {
                 html += `
-                    <div class="category-card" onclick="selectCategory('${cat.replace(/'/g, "\\'")}')">
+                    <div class="category-card" data-category="${cat.replace(/"/g, '&quot;')}">
                         <div class="category-icon"><i class="fa-solid fa-book-open"></i></div>
                         <div class="category-name">${cat}</div>
                         <div class="category-count">${count.toLocaleString()} ${isAmharic ? 'መጻሕፍት' : 'Books'}</div>
@@ -505,6 +507,13 @@
 
             html += `</div>`;
             container.innerHTML = html;
+
+            // Secure event listener binding
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    selectCategory(card.getAttribute('data-category'));
+                });
+            });
         }
 
         function renderCatalogView() {
@@ -537,11 +546,12 @@
                 const message = encodeURIComponent(`Hello, I would like to request the file for: ${book.title} (ID: ${book.id})`);
                 const tgLink = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
                 const orderText = isAmharic ? 'ይህን ፋይል ይጠይቁ' : 'Request File';
+                const safeImage = encodeURI(book.image);
 
                 html += `
                     <div class="book-card">
                         <div class="book-cover-container">
-                            <img src="${book.image}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'">
+                            <img src="${safeImage}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'">
                         </div>
                         <div class="book-category">${book.category}</div>
                         <h3 class="book-title" title="${book.title}">${book.title}</h3>
