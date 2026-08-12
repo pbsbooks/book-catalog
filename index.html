@@ -3,182 +3,646 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Book Library</title>
+    <title>Pinnah Book Store | Premium Digital Archive</title>
+    
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * { box-sizing: border-box; }
-        body { 
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: #f8f9fa; 
-            color: #212529;
-            margin: 0; 
-            padding: 20px; 
+        :root {
+            --bg-color: #f8fafc;
+            --surface: #ffffff;
+            --primary: #0b3154; /* Matches your logo's navy blue */
+            --accent: #d4af37;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.15);
         }
-        header {
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+        }
+
+        /* --- Navbar --- */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .brand img {
+            height: 35px;
+            border-radius: 4px;
+        }
+
+        .nav-actions { display: flex; gap: 1rem; }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover { background: var(--primary); color: white; }
+
+        /* --- Hero Search Section (WITH BACKGROUND & LOGO) --- */
+        .hero {
+            padding: 6rem 5%;
             text-align: center;
-        }
-        h1 { margin-bottom: 15px; }
-        .search-box {
-            width: 100%;
-            max-width: 500px;
-            padding: 12px 18px;
-            font-size: 1rem;
-            border: 2px solid #ced4da;
-            border-radius: 25px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .search-box:focus {
-            border-color: #0088cc;
-        }
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 20px; 
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .card { 
-            background: white; 
-            padding: 15px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            /* Background image with a dark overlay to make text pop */
+            background-image: linear-gradient(rgba(11, 49, 84, 0.85), rgba(11, 49, 84, 0.95)), url('Home-page.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center; 
+        }
+
+        .hero-logo {
+            width: 180px;
+            height: 180px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+            object-fit: contain;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hero-logo:hover {
+            transform: scale(1.05) rotate(3deg);
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            color: #cbd5e1;
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto 3rem auto;
+            line-height: 1.6;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
             position: relative;
         }
-        .card img { 
+
+        .search-input {
             width: 100%;
-            height: 300px;
-            object-fit: cover; 
-            border-radius: 6px; 
-            background-color: #e9ecef;
+            padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+            font-size: 1.1rem;
+            border: 3px solid transparent;
+            border-radius: 50px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            outline: none;
+            transition: all 0.3s ease;
         }
-        .badge {
+
+        .search-input:focus { 
+            transform: scale(1.02); 
+            border-color: var(--accent);
+        }
+
+        .search-icon {
             position: absolute;
-            top: 25px;
-            right: 25px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            font-weight: bold;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 1.2rem;
         }
-        h3 {
-            font-size: 1rem;
-            margin: 15px 0 10px 0;
+
+        /* --- Main Content Grid --- */
+        .container {
+            padding: 4rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* --- Book Card --- */
+        .book-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .book-cover-container {
+            width: 140px;
+            height: 200px;
+            margin-bottom: 1.5rem;
+            box-shadow: 5px 10px 20px rgba(0,0,0,0.15);
+            border-radius: 4px 8px 8px 4px;
+            overflow: hidden;
+            transition: transform 0.5s ease;
+        }
+
+        .book-card:hover .book-cover-container {
+            transform: scale(1.05);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: var(--bg-color);
+        }
+
+        .book-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            height: 2.6em;
+            height: 40px;
         }
-        .btn { 
-            margin-top: auto; 
-            padding: 10px 15px; 
-            background: #0088cc; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 6px; 
-            width: 100%;
-            font-weight: 600;
+
+        .book-author {
+            color: var(--text-muted);
             font-size: 0.9rem;
-            transition: background 0.2s;
         }
-        .btn:hover { background: #0077b3; }
-        .load-more-container {
-            text-align: center;
-            margin: 40px 0;
+
+        /* --- Pop-up Modal System --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 49, 84, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        .load-btn {
-            background: #212529;
-            color: white;
-            border: none;
-            padding: 12px 30px;
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 700px;
             border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
+            padding: 3rem;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        .load-btn:hover { background: #343a40; }
+
+        .modal.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover { color: var(--primary); }
+
+        .modal-layout {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .modal-cover-container {
+            width: 180px;
+            height: 260px;
+            flex-shrink: 0;
+            box-shadow: 5px 10px 25px rgba(0,0,0,0.2);
+            border-radius: 4px 8px 8px 4px;
+            overflow: hidden;
+        }
+
+        .modal-cover-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-details h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .modal-author {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 2rem;
+        }
+
+        .btn-order {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(11, 49, 84, 0.2);
+        }
+
+        .btn-order:hover { 
+            background: var(--accent); 
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* --- Pagination --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 4rem;
+        }
+
+        .btn-page {
+            padding: 0.8rem 1.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .btn-page:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-page:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .loader {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero-logo { width: 120px; height: 120px; }
+            .modal-layout { flex-direction: column; align-items: center; text-align: center; }
+            .modal-content { padding: 2rem; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Digital Library Catalog</h1>
-        <input type="text" id="search" class="search-box" placeholder="Search by book title..." onkeyup="filterBooks()">
-    </header>
-    
-    <div class="grid" id="book-container"></div>
+    <nav>
+        <a href="#" class="brand">
+            <img src="logo.png" alt="Icon" onerror="this.style.display='none'"> 
+            Pinnah
+        </a>
+        <div class="nav-actions">
+            <button class="btn-outline" id="langToggle" onclick="toggleLang()">🌐 አማርኛ</button>
+            <a href="https://t.me/YOUR_CHANNEL" target="_blank" class="btn-outline" style="background: var(--primary); color: white;">Join Channel</a>
+        </div>
+    </nav>
 
-    <div class="load-more-container">
-        <button id="load-more-btn" class="load-btn" onclick="renderBatch()" style="display: none;">Load More Books</button>
+    <header class="hero">
+        <img src="logo.png" alt="Pinnah Book Store Logo" class="hero-logo" onerror="this.style.display='none'">
+        <h1 data-en="The Ultimate Digital Archive" data-am="የመጨረሻው ዲጂታል ማህደር">The Ultimate Digital Archive</h1>
+        <p data-en="Search across 15,000+ premium academic texts, engineering standards, and literary classics." data-am="ከ 15,000 በላይ ከፍተኛ የአካዳሚክ ጽሑፎችን እና የምህንድስና መመሪያዎችን ይፈልጉ።">Search across 15,000+ premium academic texts, engineering standards, and literary classics.</p>
+        
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by title, author, or category..." oninput="debounceSearch()">
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="stats-bar">
+            <div>
+                <strong id="resultCount">0</strong> <span data-en="Books Found" data-am="መጻሕፍት ተገኝተዋል">Books Found</span>
+            </div>
+        </div>
+
+        <div class="book-grid" id="catalogGrid">
+            <div class="loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading catalog...</div>
+        </div>
+
+        <div class="pagination" id="paginationControls"></div>
+    </main>
+
+    <!-- Modal Structure -->
+    <div class="modal" id="bookModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-layout">
+                <div class="modal-cover-container">
+                    <img id="modalImg" src="" alt="Cover">
+                </div>
+                <div class="modal-details">
+                    <div class="book-category" id="modalCategory">Category</div>
+                    <h2 id="modalTitle">Title</h2>
+                    <p class="modal-author" id="modalAuthor">Author Info</p>
+                    <p class="modal-desc" id="modalDesc">Description of the book goes here...</p>
+                    <a href="#" class="btn-order" id="modalActionBtn" target="_blank">
+                        <i class="fa-brands fa-telegram"></i> <span id="modalBtnText">Request File</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        // --- Configuration ---
+        const TELEGRAM_CONTACT = "YOUR_USERNAME_OR_GROUP"; // Change this to your group/bot
+        const BOOKS_PER_PAGE = 24;
+        
+        // --- State ---
         let allBooks = [];
         let filteredBooks = [];
-        let currentIndex = 0;
-        const BATCH_SIZE = 40;
+        let currentPage = 1;
+        let isAmharic = false;
+        let searchTimeout;
 
-        async function initCatalog() {
+        // --- Core Functions ---
+        async function initApp() {
             try {
-                const response = await fetch('catalog.json');
-                allBooks = await response.json();
-                filteredBooks = allBooks;
-                renderBatch();
+                // In production, uncomment the fetch lines to use your books.json
+                // const response = await fetch('books.json');
+                // allBooks = await response.json();
+                
+                // MOCK DATA for immediate testing (Delete this when using your real JSON)
+                allBooks = Array.from({length: 15000}, (_, i) => ({
+                    id: i + 1,
+                    t: `Sample Academic Book ${i + 1}`,
+                    a: `Author Name ${Math.floor(Math.random() * 100)}`,
+                    c: `Engineering & Science`,
+                    c_am: `ምህንድስና እና ሳይንስ`,
+                    d: `This is a detailed description for book ${i+1}. It covers advanced topics and methodologies required for professional study.`,
+                    d_am: `ይህ ለመጽሐፍ ${i+1} ዝርዝር መግለጫ ነው። ለሙያዊ ጥናት አስፈላጊ የሆኑ የላቁ ርዕሶችን እና ዘዴዎችን ይሸፍናል።`,
+                    i: `https://placehold.co/400x600/e2e8f0/64748b?text=Book+${i + 1}`
+                }));
+                // END MOCK DATA
+
+                filteredBooks = [...allBooks];
+                renderPage();
             } catch (error) {
-                console.error("Error loading catalog:", error);
-                document.getElementById('book-container').innerHTML = '<p>Error loading catalog.json</p>';
+                document.getElementById('catalogGrid').innerHTML = '<div class="loader">Failed to load catalog.</div>';
             }
         }
 
-        function renderBatch() {
-            const container = document.getElementById('book-container');
-            const nextBatch = filteredBooks.slice(currentIndex, currentIndex + BATCH_SIZE);
+        function renderPage() {
+            const grid = document.getElementById('catalogGrid');
+            document.getElementById('resultCount').innerText = filteredBooks.length.toLocaleString();
+            grid.innerHTML = '';
 
-            nextBatch.forEach(book => {
-                const card = document.createElement('div');
-                card.className = 'card';
+            if (filteredBooks.length === 0) {
+                grid.innerHTML = `<div class="loader">${isAmharic ? 'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</div>`;
+                renderPagination(0);
+                return;
+            }
+
+            const start = (currentPage - 1) * BOOKS_PER_PAGE;
+            const booksToShow = filteredBooks.slice(start, start + BOOKS_PER_PAGE);
+            const fragment = document.createDocumentFragment();
+
+            booksToShow.forEach(book => {
+                const category = isAmharic && book.c_am ? book.c_am : (book.c || 'General');
                 
-                const msg = `Hi! I would like to order: ${book.title} (ID: ${book.id})`;
-                const telegramLink = `https://t.me/PBSA001?text=${encodeURIComponent(msg)}`;
-
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                // Pass the book ID to the modal opener
+                card.onclick = () => openModal(book.id);
+                
                 card.innerHTML = `
-                    <span class="badge">${book.format || 'PDF'}</span>
-                    <img src="covers/${book.cover_image}" alt="Cover" loading="lazy" onerror="this.src='https://via.placeholder.com/200x300?text=No+Cover'">
-                    <h3>${book.title}</h3>
-                    <a href="${telegramLink}" target="_blank" class="btn">Order via Telegram</a>
+                    <div class="book-cover-container">
+                        <img src="${book.i}" alt="Cover" class="book-cover" loading="lazy">
+                    </div>
+                    <div class="book-category">${category}</div>
+                    <h3 class="book-title" title="${book.t}">${book.t}</h3>
+                    <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.a}</div>
                 `;
-                container.appendChild(card);
+                fragment.appendChild(card);
             });
 
-            currentIndex += BATCH_SIZE;
-            
-            const loadBtn = document.getElementById('load-more-btn');
-            if (currentIndex < filteredBooks.length) {
-                loadBtn.style.display = 'inline-block';
-            } else {
-                loadBtn.style.display = 'none';
-            }
+            grid.appendChild(fragment);
+            renderPagination(Math.ceil(filteredBooks.length / BOOKS_PER_PAGE));
         }
 
-        function filterBooks() {
-            const query = document.getElementById('search').value.toLowerCase();
-            filteredBooks = allBooks.filter(book => book.title.toLowerCase().includes(query));
-            
-            // Reset grid and rendering counter
-            document.getElementById('book-container').innerHTML = '';
-            currentIndex = 0;
-            renderBatch();
+        function renderPagination(totalPages) {
+            const controls = document.getElementById('paginationControls');
+            if (totalPages <= 1) { controls.innerHTML = ''; return; }
+
+            controls.innerHTML = `
+                <button class="btn-page" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fa-solid fa-chevron-left"></i> ${isAmharic ? 'ቀደመ' : 'Prev'}
+                </button>
+                <span style="font-weight: 600;">${currentPage} / ${totalPages}</span>
+                <button class="btn-page" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}>
+                    ${isAmharic ? 'ቀጣይ' : 'Next'} <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            `;
         }
 
-        initCatalog();
+        function changePage(delta) {
+            currentPage += delta;
+            renderPage();
+            window.scrollTo({ top: document.querySelector('.stats-bar').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = document.getElementById('searchInput').value.toLowerCase().trim();
+                currentPage = 1;
+
+                if (!query) filteredBooks = [...allBooks];
+                else filteredBooks = allBooks.filter(b => 
+                    b.t.toLowerCase().includes(query) || 
+                    b.a.toLowerCase().includes(query) || 
+                    (b.c && b.c.toLowerCase().includes(query))
+                );
+                renderPage();
+            }, 300);
+        }
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('bookModal');
+        
+        function openModal(bookId) {
+            const book = filteredBooks.find(b => b.id === bookId);
+            if (!book) return;
+
+            document.getElementById('modalImg').src = book.i;
+            document.getElementById('modalCategory').innerText = isAmharic && book.c_am ? book.c_am : (book.c || 'General');
+            document.getElementById('modalTitle').innerText = book.t;
+            document.getElementById('modalAuthor').innerText = `${isAmharic ? 'በ' : 'by'} ${book.a}`;
+            
+            // Handle description fallback
+            const desc = isAmharic && book.d_am ? book.d_am : (book.d || (isAmharic ? 'ምንም መግለጫ አልቀረበም' : 'No description provided.'));
+            document.getElementById('modalDesc').innerText = desc;
+            
+            // Set up Telegram Link
+            document.getElementById('modalBtnText').innerText = isAmharic ? 'ይህን ፋይል ይጠይቁ' : 'Request this File';
+            const message = encodeURIComponent(`Hello, I would like to request: ${book.t} (ID: ${book.id})`);
+            document.getElementById('modalActionBtn').href = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == modal) closeModal();
+        }
+
+        // --- Translation Logic ---
+        function toggleLang() {
+            isAmharic = !isAmharic;
+            document.getElementById('langToggle').innerHTML = isAmharic ? '🌐 English' : '🌐 አማርኛ';
+            
+            document.querySelectorAll('[data-en]').forEach(el => {
+                el.innerText = isAmharic ? el.getAttribute('data-am') : el.getAttribute('data-en');
+            });
+
+            document.getElementById('searchInput').placeholder = isAmharic 
+                ? 'በአርእስት፣ ደራሲ ወይም ዘርፍ ይፈልጉ...' 
+                : 'Search by title, author, or category...';
+
+            renderPage(); 
+        }
+
+        window.onload = initApp;
     </script>
 </body>
 </html>
