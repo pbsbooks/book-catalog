@@ -1,4 +1,3 @@
-cat << 'EOF' > convert.py
 import pandas as pd
 import json
 import os
@@ -8,31 +7,35 @@ df = pd.read_excel(excel_path)
 
 catalog = []
 for idx, row in df.iterrows():
-    book_id = idx + 1
+    book_id = row.get("Book ID", idx + 1)
     
-    title_val = str(row.get("Title", "")).strip()
-    if title_val == "nan" or not title_val:
-        title_val = f"Book {book_id}"
+    # Handle standard zero-padded webp filenames based on ID
+    if pd.notna(book_id):
+        try:
+            cover_filename = f"BK-{int(book_id):05d}.webp"
+        except ValueError:
+            cover_filename = str(row.get("Cover Image", "placeholder.webp"))
+    else:
+        cover_filename = "placeholder.webp"
 
-    author_val = str(row.get("Author(s)", "")).strip()
-    if author_val == "nan" or not author_val:
-        author_val = "Unknown Author"
-
-    cover_filename = f"BK-{book_id:05d}.webp"
+    # Fallback to placeholder if file doesn't exist locally
     cover_path = os.path.join("covers", cover_filename)
     final_cover = cover_filename if os.path.exists(cover_path) else "placeholder.webp"
 
     catalog.append({
-        "id": book_id,
-        "title": title_val,
-        "author": author_val,
+        "id": int(book_id) if pd.notna(book_id) and str(book_id).isdigit() else idx + 1,
+        "title": str(row.get("Title", "Unknown Title")),
+        "author": str(row.get("Author(s)", "Unknown Author")),
+        "category": str(row.get("Category", "General")),
+        "price": str(row.get("Price (ETB)", "0")),
         "cover_image": final_cover,
+        "language": str(row.get("Language", "English")),
+        "publisher": str(row.get("Publisher", "")),
         "format": str(row.get("Format", "PDF")),
-        "price": str(row.get("Price (ETB)", ""))
+        "page_count": str(row.get("Page Count", ""))
     })
 
 with open("catalog.json", "w") as f:
     json.dump(catalog, f, indent=2)
 
-print(f"Successfully generated catalog.json with {len(catalog)} entries.")
-EOF
+print(f"Successfully created catalog.json with {len(catalog)} entries.")
