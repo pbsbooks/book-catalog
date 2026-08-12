@@ -283,6 +283,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            cursor: pointer;
         }
 
         .book-card:hover {
@@ -394,6 +395,92 @@
             grid-column: 1 / -1;
         }
 
+        /* --- Book Modal Pop-up --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+        }
+
+        .modal-cover {
+            width: 180px;
+            height: 260px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-author {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .modal-description {
+            text-align: left;
+            line-height: 1.7;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+        }
+
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             .hero-logo { width: 120px; height: 120px; }
@@ -428,6 +515,18 @@
         <div class="loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading archive...</div>
     </main>
 
+    <!-- Book Modal Pop-up -->
+    <div id="bookModal" class="modal-overlay" onclick="closeModalOnBackdrop(event)">
+        <div class="modal">
+            <button class="modal-close" onclick="closeBookModal()">✕</button>
+            <img id="modalCover" class="modal-cover" src="" alt="Book Cover">
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <div id="modalAuthor" class="modal-author"></div>
+            <div id="modalDescription" class="modal-description"></div>
+            <a id="modalOrderBtn" href="#" target="_blank" class="btn-order" style="width:auto; padding: 0.75rem 2rem;">Request File</a>
+        </div>
+    </div>
+
     <script>
         const TELEGRAM_CONTACT = "YOUR_USERNAME_OR_GROUP";
         const BOOKS_PER_PAGE = 24;
@@ -454,7 +553,8 @@
                         title: b.title || b.Title || b.t || b.name || `Book #${id}`,
                         author: b.author || b.Author || b.a || b.writer || 'Unknown Author',
                         category: b.category || b.Category || b.c || b.cat || b.genre || b.subject || 'General Archive',
-                        image: b.image || b.Image || b.cover || b.Cover || b.i || `covers/${id}.webp`
+                        image: b.image || b.Image || b.cover || b.Cover || b.i || `covers/${id}.webp`,
+                        description: b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || 'No description available.'
                     };
                 });
 
@@ -549,14 +649,14 @@
                 const safeImage = encodeURI(book.image);
 
                 html += `
-                    <div class="book-card">
+                    <div class="book-card" data-id="${book.id}">
                         <div class="book-cover-container">
                             <img src="${safeImage}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'">
                         </div>
                         <div class="book-category">${book.category}</div>
                         <h3 class="book-title" title="${book.title}">${book.title}</h3>
                         <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
-                        <a href="${tgLink}" target="_blank" class="btn-order">
+                        <a href="${tgLink}" target="_blank" class="btn-order" onclick="event.stopPropagation();">
                             <i class="fa-brands fa-telegram"></i> ${orderText}
                         </a>
                     </div>
@@ -579,6 +679,15 @@
             }
 
             container.innerHTML = html;
+
+            // Attach click event to each book card to open the modal
+            document.querySelectorAll('.book-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const bookId = card.getAttribute('data-id');
+                    const book = filteredBooks.find(b => String(b.id) === String(bookId));
+                    if (book) openBookModal(book);
+                });
+            });
         }
 
         function selectCategory(categoryName) {
@@ -641,6 +750,31 @@
                 : 'Search any book title or author...';
 
             renderView(); 
+        }
+
+        // --- Modal Functions ---
+        function openBookModal(book) {
+            document.getElementById('modalCover').src = book.image;
+            document.getElementById('modalTitle').innerText = book.title;
+            document.getElementById('modalAuthor').innerText = (isAmharic ? 'በ' : 'by') + ' ' + book.author + ' · ' + book.category;
+            document.getElementById('modalDescription').innerText = book.description || (isAmharic ? 'ዝርዝር መግለጫ የለም።' : 'No description available.');
+
+            const message = encodeURIComponent(`Hello, I would like to request the file for: ${book.title} (ID: ${book.id})`);
+            document.getElementById('modalOrderBtn').href = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
+
+            document.getElementById('bookModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBookModal() {
+            document.getElementById('bookModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeModalOnBackdrop(event) {
+            if (event.target === document.getElementById('bookModal')) {
+                closeBookModal();
+            }
         }
 
         window.onload = initApp;
