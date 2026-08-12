@@ -1,32 +1,38 @@
-import csv
+cat << 'EOF' > convert.py
+import pandas as pd
 import json
 import os
 
-input_csv = 'audit.csv'
-output_json = 'catalog.json'
+excel_path = os.path.expanduser('~/catalog_updated.xlsx')
+df = pd.read_excel(excel_path)
 
 catalog = []
+for idx, row in df.iterrows():
+    book_id = idx + 1
+    
+    title_val = str(row.get("Title", "")).strip()
+    if title_val == "nan" or not title_val:
+        title_val = f"Book {book_id}"
 
-if not os.path.exists(input_csv):
-    print(f"Error: {input_csv} not found in current directory.")
-    exit(1)
+    author_val = str(row.get("Author(s)", "")).strip()
+    if author_val == "nan" or not author_val:
+        author_val = "Unknown Author"
 
-with open(input_csv, mode='r', encoding='utf-8-sig') as f:
-    reader = csv.DictReader(f)
-    for idx, row in enumerate(reader, start=1):
-        # Extract title or fallback to filename/ID
-        title = row.get('title') or row.get('filename') or f"Book {idx}"
-        cover = row.get('cover_image') or f"{idx}.jpg"
-        file_format = row.get('format') or "PDF"
+    cover_filename = f"BK-{book_id:05d}.webp"
+    cover_path = os.path.join("covers", cover_filename)
+    final_cover = cover_filename if os.path.exists(cover_path) else "placeholder.webp"
 
-        catalog.append({
-            "id": idx,
-            "title": title.strip(),
-            "cover_image": cover.strip(),
-            "format": file_format.strip().upper()
-        })
+    catalog.append({
+        "id": book_id,
+        "title": title_val,
+        "author": author_val,
+        "cover_image": final_cover,
+        "format": str(row.get("Format", "PDF")),
+        "price": str(row.get("Price (ETB)", ""))
+    })
 
-with open(output_json, 'w', encoding='utf-8') as f:
-    json.dump(catalog, f, ensure_ascii=False, indent=2)
+with open("catalog.json", "w") as f:
+    json.dump(catalog, f, indent=2)
 
-print(f"Successfully created {output_json} with {len(catalog)} entries.")
+print(f"Successfully generated catalog.json with {len(catalog)} entries.")
+EOF
