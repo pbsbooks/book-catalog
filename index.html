@@ -15,7 +15,7 @@
         :root {
             --bg-color: #f8fafc;
             --surface: #ffffff;
-            --primary: #0b3154; /* Matches your logo's navy blue */
+            --primary: #0b3154;
             --accent: #d4af37;
             --text-main: #334155;
             --text-muted: #64748b;
@@ -68,6 +68,7 @@
             align-items: center;
             gap: 10px;
             font-family: 'Playfair Display', serif;
+            cursor: pointer;
         }
 
         .brand img {
@@ -75,7 +76,7 @@
             border-radius: 4px;
         }
 
-        .nav-actions { display: flex; gap: 1rem; }
+        .nav-actions { display: flex; gap: 1rem; align-items: center; }
 
         .btn-outline {
             border: 2px solid var(--primary);
@@ -90,11 +91,10 @@
 
         .btn-outline:hover { background: var(--primary); color: white; }
 
-        /* --- Hero Search Section (WITH BACKGROUND & LOGO) --- */
+        /* --- Hero Section --- */
         .hero {
-            padding: 6rem 5%;
+            padding: 5rem 5%;
             text-align: center;
-            /* Background image with a dark overlay to make text pop */
             background-image: linear-gradient(rgba(11, 49, 84, 0.85), rgba(11, 49, 84, 0.95)), url('Home-page.png');
             background-size: cover;
             background-position: center;
@@ -106,13 +106,13 @@
         }
 
         .hero-logo {
-            width: 180px;
-            height: 180px;
+            width: 150px;
+            height: 150px;
             background: white;
             border-radius: 50%;
             padding: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             object-fit: contain;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -123,17 +123,17 @@
 
         .hero h1 {
             color: white;
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 900;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             letter-spacing: -0.5px;
         }
 
         .hero p {
             color: #cbd5e1;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             max-width: 650px;
-            margin: 0 auto 3rem auto;
+            margin: 0 auto 2.5rem auto;
             line-height: 1.6;
         }
 
@@ -169,29 +169,109 @@
             font-size: 1.2rem;
         }
 
-        /* --- Main Content Grid --- */
+        /* --- Main Content Container --- */
         .container {
-            padding: 4rem 5%;
+            padding: 3rem 5%;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        .stats-bar {
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
             padding-bottom: 1rem;
             border-bottom: 2px solid var(--border);
         }
 
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* --- Category Cards Grid --- */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            background: #f1f5f9;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .category-card:hover .category-icon {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        .category-name {
+            font-size: 1.3rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+        }
+
+        .category-count {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: var(--bg-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* --- Book Grid --- */
         .book-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 2.5rem;
         }
 
-        /* --- Book Card --- */
         .book-card {
             background: var(--surface);
             border-radius: 16px;
@@ -199,16 +279,14 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            position: relative;
         }
 
         .book-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-8px);
             box-shadow: var(--shadow-lg);
             border-color: var(--accent);
         }
@@ -220,18 +298,13 @@
             box-shadow: 5px 10px 20px rgba(0,0,0,0.15);
             border-radius: 4px 8px 8px 4px;
             overflow: hidden;
-            transition: transform 0.5s ease;
-        }
-
-        .book-card:hover .book-cover-container {
-            transform: scale(1.05);
+            background: var(--bg-color);
         }
 
         .book-cover {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            background: var(--bg-color);
         }
 
         .book-category {
@@ -244,7 +317,7 @@
         }
 
         .book-title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin-bottom: 0.5rem;
             line-height: 1.3;
             display: -webkit-box;
@@ -257,120 +330,29 @@
         .book-author {
             color: var(--text-muted);
             font-size: 0.9rem;
-        }
-
-        /* --- Pop-up Modal System --- */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(11, 49, 84, 0.7);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            background: #ffffff;
-            width: 90%;
-            max-width: 700px;
-            border-radius: 20px;
-            padding: 3rem;
-            position: relative;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal.active .modal-content {
-            transform: scale(1) translateY(0);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
-
-        .close-btn:hover { color: var(--primary); }
-
-        .modal-layout {
-            display: flex;
-            gap: 2.5rem;
-        }
-
-        .modal-cover-container {
-            width: 180px;
-            height: 260px;
-            flex-shrink: 0;
-            box-shadow: 5px 10px 25px rgba(0,0,0,0.2);
-            border-radius: 4px 8px 8px 4px;
-            overflow: hidden;
-        }
-
-        .modal-cover-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-details h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-
-        .modal-author {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-desc {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: var(--text-main);
-            margin-bottom: 2rem;
+            margin-bottom: 1.2rem;
+            flex-grow: 1;
         }
 
         .btn-order {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
             background: var(--primary);
             color: white;
-            padding: 12px 24px;
+            padding: 0.75rem;
             border-radius: 50px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 0.9rem;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(11, 49, 84, 0.2);
         }
 
         .btn-order:hover { 
             background: var(--accent); 
-            color: var(--primary);
-            transform: translateY(-2px);
+            color: var(--primary); 
         }
 
         /* --- Pagination --- */
@@ -415,15 +397,13 @@
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             .hero-logo { width: 120px; height: 120px; }
-            .modal-layout { flex-direction: column; align-items: center; text-align: center; }
-            .modal-content { padding: 2rem; }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="#" class="brand">
+        <a onclick="goHome()" class="brand">
             <img src="logo.png" alt="Icon" onerror="this.style.display='none'"> 
             Pinnah
         </a>
@@ -436,197 +416,219 @@
     <header class="hero">
         <img src="logo.png" alt="Pinnah Book Store Logo" class="hero-logo" onerror="this.style.display='none'">
         <h1 data-en="The Ultimate Digital Archive" data-am="የመጨረሻው ዲጂታል ማህደር">The Ultimate Digital Archive</h1>
-        <p data-en="Search across 15,000+ premium academic texts, engineering standards, and literary classics." data-am="ከ 15,000 በላይ ከፍተኛ የአካዳሚክ ጽሑፎችን እና የምህንድስና መመሪያዎችን ይፈልጉ።">Search across 15,000+ premium academic texts, engineering standards, and literary classics.</p>
+        <p data-en="Select a category below or search across 15,000+ texts instantly." data-am="ከዚህ በታች ምድብ ይምረጡ ወይም መጻሕፍትን ይፈልጉ።">Select a category below or search across 15,000+ texts instantly.</p>
         
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search by title, author, or category..." oninput="debounceSearch()">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search any book title or author..." oninput="handleSearch()">
         </div>
     </header>
 
-    <main class="container">
-        <div class="stats-bar">
-            <div>
-                <strong id="resultCount">0</strong> <span data-en="Books Found" data-am="መጻሕፍት ተገኝተዋል">Books Found</span>
-            </div>
-        </div>
-
-        <div class="book-grid" id="catalogGrid">
-            <div class="loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading catalog...</div>
-        </div>
-
-        <div class="pagination" id="paginationControls"></div>
+    <main class="container" id="mainContent">
+        <!-- Dynamic content injected via JavaScript -->
+        <div class="loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading archive...</div>
     </main>
-
-    <!-- Modal Structure -->
-    <div class="modal" id="bookModal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-            <div class="modal-layout">
-                <div class="modal-cover-container">
-                    <img id="modalImg" src="" alt="Cover">
-                </div>
-                <div class="modal-details">
-                    <div class="book-category" id="modalCategory">Category</div>
-                    <h2 id="modalTitle">Title</h2>
-                    <p class="modal-author" id="modalAuthor">Author Info</p>
-                    <p class="modal-desc" id="modalDesc">Description of the book goes here...</p>
-                    <a href="#" class="btn-order" id="modalActionBtn" target="_blank">
-                        <i class="fa-brands fa-telegram"></i> <span id="modalBtnText">Request File</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         // --- Configuration ---
-        const TELEGRAM_CONTACT = "YOUR_USERNAME_OR_GROUP"; // Change this to your group/bot
+        const TELEGRAM_CONTACT = "YOUR_USERNAME_OR_GROUP";
         const BOOKS_PER_PAGE = 24;
         
         // --- State ---
         let allBooks = [];
         let filteredBooks = [];
+        let currentView = 'categories'; // 'categories' | 'catalog' | 'search'
+        let selectedCategory = '';
         let currentPage = 1;
         let isAmharic = false;
         let searchTimeout;
 
-        // --- Core Functions ---
+        // --- Core Initialization ---
         async function initApp() {
             try {
-                // In production, uncomment the fetch lines to use your books.json
-                // const response = await fetch('books.json');
-                // allBooks = await response.json();
+                const response = await fetch('catalog.json');
+                const rawData = await response.json();
                 
-                // MOCK DATA for immediate testing (Delete this when using your real JSON)
-                allBooks = Array.from({length: 15000}, (_, i) => ({
-                    id: i + 1,
-                    t: `Sample Academic Book ${i + 1}`,
-                    a: `Author Name ${Math.floor(Math.random() * 100)}`,
-                    c: `Engineering & Science`,
-                    c_am: `ምህንድስና እና ሳይንስ`,
-                    d: `This is a detailed description for book ${i+1}. It covers advanced topics and methodologies required for professional study.`,
-                    d_am: `ይህ ለመጽሐፍ ${i+1} ዝርዝር መግለጫ ነው። ለሙያዊ ጥናት አስፈላጊ የሆኑ የላቁ ርዕሶችን እና ዘዴዎችን ይሸፍናል።`,
-                    i: `https://placehold.co/400x600/e2e8f0/64748b?text=Book+${i + 1}`
-                }));
-                // END MOCK DATA
+                // Universal normalization: supports short keys (t, a, c, i) and full keys (title, author, category, image)
+                allBooks = rawData.map((b, index) => {
+                    const id = b.id || index + 1;
+                    return {
+                        id: id,
+                        title: b.title || b.t || `Book #${id}`,
+                        author: b.author || b.a || 'Unknown Author',
+                        category: b.category || b.c || 'General Archive',
+                        category_am: b.category_am || b.c_am || '',
+                        image: b.image || b.cover || b.i || `covers/${id}.webp`
+                    };
+                });
 
-                filteredBooks = [...allBooks];
-                renderPage();
+                renderView();
             } catch (error) {
-                document.getElementById('catalogGrid').innerHTML = '<div class="loader">Failed to load catalog.</div>';
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="loader" style="color: #ef4444;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.<br>
+                        <span style="font-size:0.9rem; color:var(--text-muted);">Ensure catalog.json is in the same folder and your python server is running.</span>
+                    </div>`;
             }
         }
 
-        function renderPage() {
-            const grid = document.getElementById('catalogGrid');
-            document.getElementById('resultCount').innerText = filteredBooks.length.toLocaleString();
-            grid.innerHTML = '';
+        // --- View Router ---
+        function renderView() {
+            if (currentView === 'categories') {
+                renderCategoriesView();
+            } else {
+                renderCatalogView();
+            }
+        }
+
+        // --- 1. Categories View ---
+        function renderCategoriesView() {
+            const container = document.getElementById('mainContent');
+            
+            // Group books and count categories
+            const categoryMap = {};
+            allBooks.forEach(book => {
+                const cat = book.category;
+                if (!categoryMap[cat]) categoryMap[cat] = 0;
+                categoryMap[cat]++;
+            });
+
+            let html = `
+                <div class="section-header">
+                    <h2>${isAmharic ? 'የመጽሐፍ ምድቦች' : 'Browse Categories'}</h2>
+                    <span style="color:var(--text-muted); font-weight:600;">${Object.keys(categoryMap).length} ${isAmharic ? 'ምድቦች' : 'Categories Available'}</span>
+                </div>
+                <div class="category-grid">
+            `;
+
+            for (const [cat, count] of Object.entries(categoryMap)) {
+                html += `
+                    <div class="category-card" onclick="selectCategory('${cat}')">
+                        <div class="category-icon"><i class="fa-solid fa-book-open"></i></div>
+                        <div class="category-name">${cat}</div>
+                        <div class="category-count">${count.toLocaleString()} ${isAmharic ? 'መጻሕፍት' : 'Books'}</div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // --- 2. Catalog Grid View ---
+        function renderCatalogView() {
+            const container = document.getElementById('mainContent');
+            const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
+            const start = (currentPage - 1) * BOOKS_PER_PAGE;
+            const booksToShow = filteredBooks.slice(start, start + BOOKS_PER_PAGE);
+
+            let html = `
+                <div class="section-header">
+                    <button class="back-btn" onclick="goHome()">
+                        <i class="fa-solid fa-arrow-left"></i> ${isAmharic ? 'ወደ ምድቦች ተመለስ' : 'Back to Categories'}
+                    </button>
+                    <div>
+                        <strong id="resultCount">${filteredBooks.length.toLocaleString()}</strong> 
+                        <span data-en="Books Found" data-am="መጻሕፍት ተገኝተዋል">Books Found</span>
+                        ${selectedCategory ? ` <span style="color:var(--text-muted);">(${selectedCategory})</span>` : ''}
+                    </div>
+                </div>
+            `;
 
             if (filteredBooks.length === 0) {
-                grid.innerHTML = `<div class="loader">${isAmharic ? 'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</div>`;
-                renderPagination(0);
+                html += `<div class="loader">${isAmharic ? 'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</div>`;
+                container.innerHTML = html;
                 return;
             }
 
-            const start = (currentPage - 1) * BOOKS_PER_PAGE;
-            const booksToShow = filteredBooks.slice(start, start + BOOKS_PER_PAGE);
-            const fragment = document.createDocumentFragment();
-
+            html += `<div class="book-grid">`;
             booksToShow.forEach(book => {
-                const category = isAmharic && book.c_am ? book.c_am : (book.c || 'General');
-                
-                const card = document.createElement('div');
-                card.className = 'book-card';
-                // Pass the book ID to the modal opener
-                card.onclick = () => openModal(book.id);
-                
-                card.innerHTML = `
-                    <div class="book-cover-container">
-                        <img src="${book.i}" alt="Cover" class="book-cover" loading="lazy">
-                    </div>
-                    <div class="book-category">${category}</div>
-                    <h3 class="book-title" title="${book.t}">${book.t}</h3>
-                    <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.a}</div>
-                `;
-                fragment.appendChild(card);
-            });
+                const message = encodeURIComponent(`Hello, I would like to request the file for: ${book.title} (ID: ${book.id})`);
+                const tgLink = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
+                const orderText = isAmharic ? 'ይህን ፋይል ይጠይቁ' : 'Request File';
 
-            grid.appendChild(fragment);
-            renderPagination(Math.ceil(filteredBooks.length / BOOKS_PER_PAGE));
+                html += `
+                    <div class="book-card">
+                        <div class="book-cover-container">
+                            <img src="${book.image}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'">
+                        </div>
+                        <div class="book-category">${book.category}</div>
+                        <h3 class="book-title" title="${book.title}">${book.title}</h3>
+                        <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
+                        <a href="${tgLink}" target="_blank" class="btn-order">
+                            <i class="fa-brands fa-telegram"></i> ${orderText}
+                        </a>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            // Pagination Controls
+            if (totalPages > 1) {
+                html += `
+                    <div class="pagination">
+                        <button class="btn-page" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>
+                            <i class="fa-solid fa-chevron-left"></i> ${isAmharic ? 'ቀደመ' : 'Prev'}
+                        </button>
+                        <span style="font-weight: 600;">${currentPage} / ${totalPages}</span>
+                        <button class="btn-page" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}>
+                            ${isAmharic ? 'ቀጣይ' : 'Next'} <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
         }
 
-        function renderPagination(totalPages) {
-            const controls = document.getElementById('paginationControls');
-            if (totalPages <= 1) { controls.innerHTML = ''; return; }
+        // --- Interaction Handlers ---
+        function selectCategory(categoryName) {
+            selectedCategory = categoryName;
+            currentView = 'catalog';
+            currentPage = 1;
+            filteredBooks = allBooks.filter(b => b.category === categoryName);
+            renderView();
+            window.scrollTo({ top: document.getElementById('mainContent').offsetTop - 100, behavior: 'smooth' });
+        }
 
-            controls.innerHTML = `
-                <button class="btn-page" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>
-                    <i class="fa-solid fa-chevron-left"></i> ${isAmharic ? 'ቀደመ' : 'Prev'}
-                </button>
-                <span style="font-weight: 600;">${currentPage} / ${totalPages}</span>
-                <button class="btn-page" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}>
-                    ${isAmharic ? 'ቀጣይ' : 'Next'} <i class="fa-solid fa-chevron-right"></i>
-                </button>
-            `;
+        function goHome() {
+            currentView = 'categories';
+            selectedCategory = '';
+            document.getElementById('searchInput').value = '';
+            renderView();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = document.getElementById('searchInput').value.toLowerCase().trim();
+                
+                if (!query) {
+                    if (currentView === 'search') goHome();
+                    return;
+                }
+
+                currentView = 'search';
+                currentPage = 1;
+                selectedCategory = 'Search Results';
+
+                filteredBooks = allBooks.filter(b => 
+                    b.title.toLowerCase().includes(query) || 
+                    b.author.toLowerCase().includes(query) || 
+                    b.category.toLowerCase().includes(query)
+                );
+
+                renderView();
+            }, 300);
         }
 
         function changePage(delta) {
             currentPage += delta;
-            renderPage();
-            window.scrollTo({ top: document.querySelector('.stats-bar').offsetTop - 100, behavior: 'smooth' });
+            renderView();
+            window.scrollTo({ top: document.getElementById('mainContent').offsetTop - 100, behavior: 'smooth' });
         }
 
-        function debounceSearch() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const query = document.getElementById('searchInput').value.toLowerCase().trim();
-                currentPage = 1;
-
-                if (!query) filteredBooks = [...allBooks];
-                else filteredBooks = allBooks.filter(b => 
-                    b.t.toLowerCase().includes(query) || 
-                    b.a.toLowerCase().includes(query) || 
-                    (b.c && b.c.toLowerCase().includes(query))
-                );
-                renderPage();
-            }, 300);
-        }
-
-        // --- Modal Logic ---
-        const modal = document.getElementById('bookModal');
-        
-        function openModal(bookId) {
-            const book = filteredBooks.find(b => b.id === bookId);
-            if (!book) return;
-
-            document.getElementById('modalImg').src = book.i;
-            document.getElementById('modalCategory').innerText = isAmharic && book.c_am ? book.c_am : (book.c || 'General');
-            document.getElementById('modalTitle').innerText = book.t;
-            document.getElementById('modalAuthor').innerText = `${isAmharic ? 'በ' : 'by'} ${book.a}`;
-            
-            // Handle description fallback
-            const desc = isAmharic && book.d_am ? book.d_am : (book.d || (isAmharic ? 'ምንም መግለጫ አልቀረበም' : 'No description provided.'));
-            document.getElementById('modalDesc').innerText = desc;
-            
-            // Set up Telegram Link
-            document.getElementById('modalBtnText').innerText = isAmharic ? 'ይህን ፋይል ይጠይቁ' : 'Request this File';
-            const message = encodeURIComponent(`Hello, I would like to request: ${book.t} (ID: ${book.id})`);
-            document.getElementById('modalActionBtn').href = `https://t.me/${TELEGRAM_CONTACT}?text=${message}`;
-
-            modal.classList.add('active');
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-        }
-
-        // Close modal when clicking outside of it
-        window.onclick = function(event) {
-            if (event.target == modal) closeModal();
-        }
-
-        // --- Translation Logic ---
         function toggleLang() {
             isAmharic = !isAmharic;
             document.getElementById('langToggle').innerHTML = isAmharic ? '🌐 English' : '🌐 አማርኛ';
@@ -636,10 +638,10 @@
             });
 
             document.getElementById('searchInput').placeholder = isAmharic 
-                ? 'በአርእስት፣ ደራሲ ወይም ዘርፍ ይፈልጉ...' 
-                : 'Search by title, author, or category...';
+                ? 'የመጽሐፍ ስም ወይም ደራሲ ይፈልጉ...' 
+                : 'Search any book title or author...';
 
-            renderPage(); 
+            renderView(); 
         }
 
         window.onload = initApp;
