@@ -572,17 +572,35 @@
         let isAmharic = false;
         let searchTimeout;
 
-        // Helper to format page numbers as integer (removes .0)
+        // Format page numbers as integer (removes .0)
         function formatPages(value) {
             if (value === null || value === undefined || value === '') return 'N/A';
             const num = Number(value);
             if (!isNaN(num) && Number.isInteger(num)) return num.toString();
-            if (!isNaN(num)) return Math.round(num).toString(); // fallback: round to nearest integer
+            if (!isNaN(num)) return Math.round(num).toString();
             return value.toString();
         }
 
-        // Helper to build Telegram share link (more reliable than direct ?text=)
-        function buildTelegramLink(message) {
+        // Build order message
+        function buildOrderMessage(book) {
+            return (
+                `📚 New Order Request\n\n` +
+                `Title: ${book.title}\n` +
+                `Author: ${book.author}\n` +
+                `ID: ${book.id}\n` +
+                `Category: ${book.category}\n` +
+                `Format: ${book.format || 'N/A'}\n` +
+                `Language: ${book.language || 'N/A'}\n` +
+                `Pages: ${formatPages(book.pages)}\n` +
+                `Year: ${book.year || 'N/A'}\n` +
+                `Price: ${book.price || 'N/A'}\n\n` +
+                `I want to purchase this book. Please send me the file.`
+            );
+        }
+
+        // Build Telegram share link (pre-fills text)
+        function buildTelegramLink(book) {
+            const message = buildOrderMessage(book);
             const encodedText = encodeURIComponent(message);
             const encodedUrl = encodeURIComponent(CHANNEL_URL);
             return `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
@@ -593,7 +611,6 @@
                 const response = await fetch('catalog.json');
                 const rawData = await response.json();
                 
-                // Robust normalization supporting all common JSON key variations
                 allBooks = rawData.map((b, index) => {
                     const id = b.id || index + 1;
                     return {
@@ -611,7 +628,6 @@
                     };
                 });
 
-                // Pre-calculate category counts once for optimal performance
                 categoryMap = {};
                 allBooks.forEach(book => {
                     const cat = book.category;
@@ -661,7 +677,6 @@
             html += `</div>`;
             container.innerHTML = html;
 
-            // Secure event listener binding
             document.querySelectorAll('.category-card').forEach(card => {
                 card.addEventListener('click', () => {
                     selectCategory(card.getAttribute('data-category'));
@@ -696,21 +711,9 @@
 
             html += `<div class="book-grid">`;
             booksToShow.forEach(book => {
-                const message = 
-                    `📚 New Order Request\n\n` +
-                    `Title: ${book.title}\n` +
-                    `Author: ${book.author}\n` +
-                    `ID: ${book.id}\n` +
-                    `Category: ${book.category}\n` +
-                    `Format: ${book.format || 'N/A'}\n` +
-                    `Language: ${book.language || 'N/A'}\n` +
-                    `Pages: ${formatPages(book.pages)}\n` +
-                    `Year: ${book.year || 'N/A'}\n` +
-                    `Price: ${book.price || 'N/A'}\n\n` +
-                    `I want to purchase this book. Please send me the file.`;
-                const tgLink = buildTelegramLink(message);
                 const orderText = isAmharic ? 'ግዛ' : 'Buy Now';
                 const safeImage = encodeURI(book.image);
+                const tgLink = buildTelegramLink(book);
 
                 html += `
                     <div class="book-card" data-id="${book.id}">
@@ -720,7 +723,7 @@
                         <div class="book-category">${book.category}</div>
                         <h3 class="book-title" title="${book.title}">${book.title}</h3>
                         <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
-                        <a href="${tgLink}" target="_blank" class="btn-order" onclick="event.stopPropagation();">
+                        <a href="${tgLink}" target="_blank" class="btn-order">
                             <i class="fa-brands fa-telegram"></i> ${orderText}
                         </a>
                     </div>
@@ -744,7 +747,6 @@
 
             container.innerHTML = html;
 
-            // Attach click event to each book card to open the modal
             document.querySelectorAll('.book-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const bookId = card.getAttribute('data-id');
@@ -822,7 +824,6 @@
             document.getElementById('modalTitle').innerText = book.title;
             document.getElementById('modalAuthor').innerText = (isAmharic ? 'በ' : 'by') + ' ' + book.author + ' · ' + book.category;
 
-            // Handle description visibility
             const descEl = document.getElementById('modalDescription');
             if (book.description && book.description.trim() !== '') {
                 descEl.innerText = book.description;
@@ -832,7 +833,6 @@
                 descEl.style.display = 'none';
             }
 
-            // Metadata items: Language, Format, Pages, Year, Price
             const metaItems = [
                 { label: isAmharic ? 'ቋንቋ' : 'Language', value: book.language },
                 { label: isAmharic ? 'ቅርጸት' : 'Format', value: book.format },
@@ -848,20 +848,8 @@
                 </div>
             `).join('');
 
-            const message = 
-                `📚 New Order Request\n\n` +
-                `Title: ${book.title}\n` +
-                `Author: ${book.author}\n` +
-                `ID: ${book.id}\n` +
-                `Category: ${book.category}\n` +
-                `Format: ${book.format || 'N/A'}\n` +
-                `Language: ${book.language || 'N/A'}\n` +
-                `Pages: ${formatPages(book.pages)}\n` +
-                `Year: ${book.year || 'N/A'}\n` +
-                `Price: ${book.price || 'N/A'}\n\n` +
-                `I want to purchase this book. Please send me the file.`;
-
-            document.getElementById('modalOrderBtn').href = buildTelegramLink(message);
+            // Set the modal Buy Now link
+            document.getElementById('modalOrderBtn').href = buildTelegramLink(book);
 
             document.getElementById('bookModal').classList.add('active');
             document.body.style.overflow = 'hidden';
