@@ -4,547 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pinnah Book Store | Premium Digital Archive</title>
-    
-    <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        :root {
-            --bg-color: #f8fafc;
-            --surface: #ffffff;
-            --primary: #0b3154;
-            --accent: #d4af37;
-            --text-main: #334155;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.15);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
-            color: var(--primary);
-        }
-
-        /* --- Navbar --- */
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Playfair Display', serif;
-            cursor: pointer;
-        }
-
-        .brand img {
-            height: 35px;
-            border-radius: 4px;
-        }
-
-        .nav-actions { display: flex; gap: 1rem; align-items: center; }
-
-        .btn-outline {
-            border: 2px solid var(--primary);
-            background: transparent;
-            color: var(--primary);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-outline:hover { background: var(--primary); color: white; }
-
-        /* --- Hero Section --- */
-        .hero {
-            padding: 5rem 5%;
-            text-align: center;
-            background-image: linear-gradient(rgba(11, 49, 84, 0.85), rgba(11, 49, 84, 0.95)), url('Home-page.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .hero-logo {
-            width: 150px;
-            height: 150px;
-            background: white;
-            border-radius: 50%;
-            padding: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-bottom: 1.5rem;
-            object-fit: contain;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .hero-logo:hover {
-            transform: scale(1.05) rotate(3deg);
-        }
-
-        .hero h1 {
-            color: white;
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 0.8rem;
-            letter-spacing: -0.5px;
-        }
-
-        .hero p {
-            color: #cbd5e1;
-            font-size: 1.1rem;
-            max-width: 650px;
-            margin: 0 auto 2.5rem auto;
-            line-height: 1.6;
-        }
-
-        .search-container {
-            width: 100%;
-            max-width: 700px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 1.2rem 1.5rem 1.2rem 3.5rem;
-            font-size: 1.1rem;
-            border: 3px solid transparent;
-            border-radius: 50px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus { 
-            transform: scale(1.02); 
-            border-color: var(--accent);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-
-        /* --- Main Content Container --- */
-        .container {
-            padding: 3rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--primary);
-            transition: all 0.2s;
-        }
-
-        .back-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* --- Category Cards Grid --- */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .category-card {
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .category-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent);
-        }
-
-        .category-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            background: #f1f5f9;
-            width: 70px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .category-card:hover .category-icon {
-            background: var(--primary);
-            color: var(--accent);
-        }
-
-        .category-name {
-            font-size: 1.3rem;
-            font-family: 'Playfair Display', serif;
-            color: var(--primary);
-        }
-
-        .category-count {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            background: var(--bg-color);
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-
-        /* --- Book Grid --- */
-        .book-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .book-card {
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .book-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent);
-        }
-
-        .book-cover-container {
-            width: 140px;
-            height: 200px;
-            margin-bottom: 1.5rem;
-            box-shadow: 5px 10px 20px rgba(0,0,0,0.15);
-            border-radius: 4px 8px 8px 4px;
-            overflow: hidden;
-            background: var(--bg-color);
-        }
-
-        .book-cover {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .book-category {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .book-title {
-            font-size: 1.05rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            height: 40px;
-        }
-
-        .book-author {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1.2rem;
-            flex-grow: 1;
-        }
-
-        .btn-order {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            padding: 0.75rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .btn-order:hover { 
-            background: var(--accent); 
-            color: var(--primary); 
-        }
-
-        /* --- Pagination --- */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin-top: 4rem;
-        }
-
-        .btn-page {
-            padding: 0.8rem 1.5rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--primary);
-            transition: all 0.2s;
-        }
-
-        .btn-page:hover:not(:disabled) {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-page:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .loader {
-            text-align: center;
-            padding: 4rem;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            grid-column: 1 / -1;
-        }
-
-        /* --- Book Modal Pop-up --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--surface);
-            border-radius: 20px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            animation: modalIn 0.3s ease;
-        }
-
-        @keyframes modalIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: #f1f5f9;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: var(--primary);
-            transition: background 0.2s;
-        }
-
-        .modal-close:hover {
-            background: var(--border);
-        }
-
-        .modal-cover {
-            width: 180px;
-            height: 260px;
-            object-fit: cover;
-            border-radius: 6px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-title {
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-author {
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        .modal-meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.8rem;
-            width: 100%;
-            margin-bottom: 1.5rem;
-        }
-
-        .meta-item {
-            background: var(--bg-color);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.6rem;
-            text-align: center;
-        }
-
-        .meta-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 0.2rem;
-        }
-
-        .meta-value {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        .modal-description {
-            text-align: left;
-            line-height: 1.7;
-            color: var(--text-main);
-            margin-bottom: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            .hero-logo { width: 120px; height: 120px; }
-        }
+        :root { --bg-color:#f8fafc; --surface:#fff; --primary:#0b3154; --accent:#d4af37; --text-main:#334155; --text-muted:#64748b; --border:#e2e8f0; --shadow-sm:0 1px 3px rgba(0,0,0,0.1); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.15); }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
+        body { background:var(--bg-color); color:var(--text-main); -webkit-font-smoothing:antialiased; }
+        h1,h2,h3 { font-family:'Playfair Display',serif; color:var(--primary); }
+        nav { background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); position:sticky; top:0; z-index:100; border-bottom:1px solid var(--border); padding:1rem 5%; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-sm); }
+        .brand { font-size:1.5rem; font-weight:700; color:var(--primary); text-decoration:none; display:flex; align-items:center; gap:10px; font-family:'Playfair Display',serif; cursor:pointer; }
+        .brand img { height:35px; border-radius:4px; }
+        .nav-actions { display:flex; gap:1rem; align-items:center; }
+        .btn-outline { border:2px solid var(--primary); background:transparent; color:var(--primary); padding:0.5rem 1rem; border-radius:8px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+        .btn-outline:hover { background:var(--primary); color:#fff; }
+        .hero { padding:5rem 5%; text-align:center; background:linear-gradient(rgba(11,49,84,0.85),rgba(11,49,84,0.95)),url('Home-page.png'); background-size:cover; background-position:center; color:#fff; display:flex; flex-direction:column; align-items:center; }
+        .hero-logo { width:150px; height:150px; background:#fff; border-radius:50%; padding:10px; box-shadow:0 10px 30px rgba(0,0,0,0.3); margin-bottom:1.5rem; object-fit:contain; }
+        .hero h1 { color:#fff; font-size:3rem; font-weight:900; margin-bottom:0.8rem; }
+        .hero p { color:#cbd5e1; font-size:1.1rem; max-width:650px; margin:0 auto 2.5rem; line-height:1.6; }
+        .search-container { width:100%; max-width:700px; margin:0 auto; position:relative; }
+        .search-input { width:100%; padding:1.2rem 1.5rem 1.2rem 3.5rem; font-size:1.1rem; border:3px solid transparent; border-radius:50px; box-shadow:0 15px 35px rgba(0,0,0,0.2); outline:none; transition:all 0.3s; }
+        .search-input:focus { transform:scale(1.02); border-color:var(--accent); }
+        .search-icon { position:absolute; left:1.5rem; top:50%; transform:translateY(-50%); color:var(--primary); font-size:1.2rem; }
+        .container { padding:3rem 5%; max-width:1400px; margin:0 auto; }
+        .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2.5rem; padding-bottom:1rem; border-bottom:2px solid var(--border); }
+        .back-btn { background:var(--surface); border:1px solid var(--border); padding:0.6rem 1.2rem; border-radius:50px; cursor:pointer; font-weight:600; color:var(--primary); }
+        .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:2rem; }
+        .category-card { background:var(--surface); border-radius:16px; padding:2.5rem 2rem; box-shadow:var(--shadow-sm); border:1px solid var(--border); cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center; gap:1rem; transition:all 0.3s; }
+        .category-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-lg); border-color:var(--accent); }
+        .category-icon { font-size:2.5rem; color:var(--primary); background:#f1f5f9; width:70px; height:70px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+        .book-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:2.5rem; }
+        .book-card { background:var(--surface); border-radius:16px; padding:1.5rem; box-shadow:var(--shadow-sm); border:1px solid var(--border); display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer; transition:all 0.4s; }
+        .book-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-lg); border-color:var(--accent); }
+        .book-cover-container { width:140px; height:200px; margin-bottom:1.5rem; box-shadow:5px 10px 20px rgba(0,0,0,0.15); border-radius:4px 8px 8px 4px; overflow:hidden; background:var(--bg-color); }
+        .book-cover { width:100%; height:100%; object-fit:cover; }
+        .book-category { font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--accent); font-weight:700; margin-bottom:0.5rem; }
+        .book-title { font-size:1.05rem; margin-bottom:0.5rem; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; height:40px; }
+        .book-author { color:var(--text-muted); font-size:0.9rem; margin-bottom:1.2rem; }
+        .btn-order { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; background:var(--primary); color:#fff; padding:0.75rem; border-radius:50px; text-decoration:none; font-weight:600; font-size:0.9rem; transition:all 0.3s; }
+        .btn-order:hover { background:var(--accent); color:var(--primary); }
+        .pagination { display:flex; justify-content:center; align-items:center; gap:1rem; margin-top:4rem; }
+        .btn-page { padding:0.8rem 1.5rem; background:var(--surface); border:1px solid var(--border); border-radius:50px; cursor:pointer; font-weight:600; color:var(--primary); }
+        .loader { text-align:center; padding:4rem; color:var(--text-muted); font-size:1.2rem; }
+        .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(5px); z-index:1000; align-items:center; justify-content:center; padding:2rem; }
+        .modal-overlay.active { display:flex; }
+        .modal { background:var(--surface); border-radius:20px; max-width:500px; width:100%; max-height:90vh; overflow-y:auto; display:flex; flex-direction:column; align-items:center; padding:2rem; position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.3); animation:modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+        .modal-close { position:absolute; top:1rem; right:1rem; background:#f1f5f9; border:none; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.2rem; color:var(--primary); }
+        .modal-cover { width:180px; height:260px; object-fit:cover; border-radius:6px; box-shadow:0 10px 20px rgba(0,0,0,0.2); margin-bottom:1.5rem; }
+        .modal-title { text-align:center; margin-bottom:0.5rem; }
+        .modal-author { color:var(--text-muted); margin-bottom:1rem; }
+        .modal-meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:0.8rem; width:100%; margin-bottom:1.5rem; }
+        .meta-item { background:var(--bg-color); border:1px solid var(--border); border-radius:8px; padding:0.6rem; text-align:center; }
+        .meta-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:0.2rem; }
+        .meta-value { font-weight:600; color:var(--primary); font-size:0.9rem; }
+        .modal-description { text-align:left; line-height:1.7; color:var(--text-main); margin-bottom:1.5rem; }
+        @media (max-width:768px) { .hero h1 { font-size:2.2rem; } .hero-logo { width:120px; height:120px; } }
     </style>
 </head>
 <body>
-
     <nav>
-        <a onclick="goHome()" class="brand">
-            <img src="logo.png" alt="Icon" onerror="this.style.display='none'"> 
-            Pinnah
-        </a>
+        <a onclick="goHome()" class="brand"><img src="logo.png" alt="Icon" onerror="this.style.display='none'"> Pinnah</a>
         <div class="nav-actions">
             <button class="btn-outline" id="langToggle" onclick="toggleLang()">🌐 አማርኛ</button>
-            <a href="https://t.me/pinnah_book_store_1" target="_blank" class="btn-outline" style="background: var(--primary); color: white;">Join Channel</a>
+            <a href="https://t.me/pinnah_book_store_1" target="_blank" class="btn-outline" style="background:var(--primary); color:#fff;">Join Channel</a>
         </div>
     </nav>
-
     <header class="hero">
         <img src="logo.png" alt="Pinnah Book Store Logo" class="hero-logo" onerror="this.style.display='none'">
         <h1 data-en="The Ultimate Digital Archive" data-am="የመጨረሻው ዲጂታል ማህደር">The Ultimate Digital Archive</h1>
         <p data-en="Select a category below or search across your library instantly." data-am="ከዚህ በታች ምድብ ይምረጡ ወይም መጻሕፍትን ይፈልጉ።">Select a category below or search across your library instantly.</p>
-        
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" id="searchInput" class="search-input" placeholder="Search any book title or author..." oninput="handleSearch()">
         </div>
     </header>
-
     <main class="container" id="mainContent">
         <div class="loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading archive...</div>
     </main>
-
     <!-- Book Modal Pop-up -->
     <div id="bookModal" class="modal-overlay" onclick="closeModalOnBackdrop(event)">
         <div class="modal">
@@ -554,25 +92,15 @@
             <div id="modalAuthor" class="modal-author"></div>
             <div id="modalMeta" class="modal-meta"></div>
             <div id="modalDescription" class="modal-description"></div>
-            <a id="modalOrderBtn" href="#" target="_blank" class="btn-order" style="width:auto; padding: 0.75rem 2rem;">Buy Now</a>
+            <button id="modalOrderBtn" class="btn-order" style="width:auto; padding:0.75rem 2rem;">Buy Now</button>
         </div>
     </div>
-
     <script>
-        const TELEGRAM_CONTACT = "PBSA001"; // Your Telegram username (without @)
-        const CHANNEL_URL = "https://t.me/pinnah_book_store_1";
+        const TELEGRAM_CONTACT = "PBSA001"; // Your personal account (no @)
         const BOOKS_PER_PAGE = 24;
-        
-        let allBooks = [];
-        let filteredBooks = [];
-        let categoryMap = {};
-        let currentView = 'categories';
-        let selectedCategory = '';
-        let currentPage = 1;
-        let isAmharic = false;
-        let searchTimeout;
+        let allBooks = [], filteredBooks = [], categoryMap = {};
+        let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
 
-        // Format page numbers as integer (removes .0)
         function formatPages(value) {
             if (value === null || value === undefined || value === '') return 'N/A';
             const num = Number(value);
@@ -581,10 +109,8 @@
             return value.toString();
         }
 
-        // Build order message
         function buildOrderMessage(book) {
-            return (
-                `📚 New Order Request\n\n` +
+            return `📚 New Order Request\n\n` +
                 `Title: ${book.title}\n` +
                 `Author: ${book.author}\n` +
                 `ID: ${book.id}\n` +
@@ -594,28 +120,29 @@
                 `Pages: ${formatPages(book.pages)}\n` +
                 `Year: ${book.year || 'N/A'}\n` +
                 `Price: ${book.price || 'N/A'}\n\n` +
-                `I want to purchase this book. Please send me the file.`
-            );
+                `I want to purchase this book. Please send me the file.`;
         }
 
-        // Build Telegram share link (pre-fills text)
-        function buildTelegramLink(book) {
+        function handleBuyClick(book, event) {
+            if (event) event.stopPropagation();
             const message = buildOrderMessage(book);
-            const encodedText = encodeURIComponent(message);
-            const encodedUrl = encodeURIComponent(CHANNEL_URL);
-            return `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+            navigator.clipboard.writeText(message).then(() => {
+                window.open(`https://t.me/${TELEGRAM_CONTACT}`, '_blank');
+                alert('Order details copied! Paste them in the Telegram chat.');
+            }).catch(() => {
+                window.open(`https://t.me/${TELEGRAM_CONTACT}`, '_blank');
+                alert('Could not copy automatically. Please type the order details manually.');
+            });
         }
 
         async function initApp() {
             try {
                 const response = await fetch('catalog.json');
                 const rawData = await response.json();
-                
                 allBooks = rawData.map((b, index) => {
                     const id = b.id || index + 1;
                     return {
-                        id: id,
-                        title: b.title || b.Title || b.t || b.name || `Book #${id}`,
+                        id, title: b.title || b.Title || b.t || b.name || `Book #${id}`,
                         author: b.author || b.Author || b.a || b.writer || 'Unknown Author',
                         category: b.category || b.Category || b.c || b.cat || b.genre || b.subject || 'General Archive',
                         image: b.image || b.Image || b.cover || b.Cover || b.i || `covers/${id}.webp`,
@@ -627,61 +154,25 @@
                         price: b.price || b.Price || b.cost || b.Cost || b.sale_price || b.salePrice || b.price_ETB || b.priceETB || 'N/A'
                     };
                 });
-
                 categoryMap = {};
-                allBooks.forEach(book => {
-                    const cat = book.category;
-                    if (!categoryMap[cat]) categoryMap[cat] = 0;
-                    categoryMap[cat]++;
-                });
-
+                allBooks.forEach(book => { const cat = book.category; if (!categoryMap[cat]) categoryMap[cat] = 0; categoryMap[cat]++; });
                 renderView();
             } catch (error) {
-                document.getElementById('mainContent').innerHTML = `
-                    <div class="loader" style="color: #ef4444;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.<br>
-                        <span style="font-size:0.9rem; color:var(--text-muted);">Ensure catalog.json is in the same folder and your local server is running.</span>
-                    </div>`;
+                document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
             }
         }
 
-        function renderView() {
-            if (currentView === 'categories') {
-                renderCategoriesView();
-            } else {
-                renderCatalogView();
-            }
-        }
+        function renderView() { currentView === 'categories' ? renderCategoriesView() : renderCatalogView(); }
 
         function renderCategoriesView() {
             const container = document.getElementById('mainContent');
-            
-            let html = `
-                <div class="section-header">
-                    <h2>${isAmharic ? 'የመጽሐፍ ምድቦች' : 'Browse Categories'}</h2>
-                    <span style="color:var(--text-muted); font-weight:600;">${Object.keys(categoryMap).length} ${isAmharic ? 'ምድቦች' : 'Categories Available'}</span>
-                </div>
-                <div class="category-grid">
-            `;
-
+            let html = `<div class="section-header"><h2>${isAmharic ? 'የመጽሐፍ ምድቦች' : 'Browse Categories'}</h2><span style="color:var(--text-muted); font-weight:600;">${Object.keys(categoryMap).length} ${isAmharic ? 'ምድቦች' : 'Categories Available'}</span></div><div class="category-grid">`;
             for (const [cat, count] of Object.entries(categoryMap)) {
-                html += `
-                    <div class="category-card" data-category="${cat.replace(/"/g, '&quot;')}">
-                        <div class="category-icon"><i class="fa-solid fa-book-open"></i></div>
-                        <div class="category-name">${cat}</div>
-                        <div class="category-count">${count.toLocaleString()} ${isAmharic ? 'መጻሕፍት' : 'Books'}</div>
-                    </div>
-                `;
+                html += `<div class="category-card" data-category="${cat.replace(/"/g,'&quot;')}"><div class="category-icon"><i class="fa-solid fa-book-open"></i></div><div class="category-name">${cat}</div><div class="category-count">${count.toLocaleString()} ${isAmharic?'መጻሕፍት':'Books'}</div></div>`;
             }
-
             html += `</div>`;
             container.innerHTML = html;
-
-            document.querySelectorAll('.category-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    selectCategory(card.getAttribute('data-category'));
-                });
-            });
+            document.querySelectorAll('.category-card').forEach(card => card.addEventListener('click', () => selectCategory(card.getAttribute('data-category'))));
         }
 
         function renderCatalogView() {
@@ -689,183 +180,48 @@
             const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
             const start = (currentPage - 1) * BOOKS_PER_PAGE;
             const booksToShow = filteredBooks.slice(start, start + BOOKS_PER_PAGE);
-
-            let html = `
-                <div class="section-header">
-                    <button class="back-btn" onclick="goHome()">
-                        <i class="fa-solid fa-arrow-left"></i> ${isAmharic ? 'ወደ ምድቦች ተመለስ' : 'Back to Categories'}
-                    </button>
-                    <div>
-                        <strong id="resultCount">${filteredBooks.length.toLocaleString()}</strong> 
-                        <span data-en="Books Found" data-am="መጻሕፍት ተገኝተዋል">Books Found</span>
-                        ${selectedCategory ? ` <span style="color:var(--text-muted);">(${selectedCategory})</span>` : ''}
-                    </div>
-                </div>
-            `;
-
-            if (filteredBooks.length === 0) {
-                html += `<div class="loader">${isAmharic ? 'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</div>`;
-                container.innerHTML = html;
-                return;
-            }
-
+            let html = `<div class="section-header"><button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> ${isAmharic?'ወደ ምድቦች ተመለስ':'Back to Categories'}</button><div><strong id="resultCount">${filteredBooks.length.toLocaleString()}</strong> <span data-en="Books Found" data-am="መጻሕፍት ተገኝተዋል">Books Found</span>${selectedCategory?` <span style="color:var(--text-muted);">(${selectedCategory})</span>`:''}</div></div>`;
+            if (filteredBooks.length === 0) { html += `<div class="loader">${isAmharic?'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።':'No books found matching your search.'}</div>`; container.innerHTML = html; return; }
             html += `<div class="book-grid">`;
             booksToShow.forEach(book => {
                 const orderText = isAmharic ? 'ግዛ' : 'Buy Now';
                 const safeImage = encodeURI(book.image);
-                const tgLink = buildTelegramLink(book);
-
-                html += `
-                    <div class="book-card" data-id="${book.id}">
-                        <div class="book-cover-container">
-                            <img src="${safeImage}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'">
-                        </div>
-                        <div class="book-category">${book.category}</div>
-                        <h3 class="book-title" title="${book.title}">${book.title}</h3>
-                        <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
-                        <a href="${tgLink}" target="_blank" class="btn-order">
-                            <i class="fa-brands fa-telegram"></i> ${orderText}
-                        </a>
-                    </div>
-                `;
+                html += `<div class="book-card" data-id="${book.id}"><div class="book-cover-container"><img src="${safeImage}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'"></div><div class="book-category">${book.category}</div><h3 class="book-title" title="${book.title}">${book.title}</h3><div class="book-author">${isAmharic?'በ':'by'} ${book.author}</div><button class="btn-order" onclick='handleBuyClick(${JSON.stringify(book).replace(/'/g,"\\'")}, event)'><i class="fa-brands fa-telegram"></i> ${orderText}</button></div>`;
             });
             html += `</div>`;
-
             if (totalPages > 1) {
-                html += `
-                    <div class="pagination">
-                        <button class="btn-page" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>
-                            <i class="fa-solid fa-chevron-left"></i> ${isAmharic ? 'ቀደመ' : 'Prev'}
-                        </button>
-                        <span style="font-weight: 600;">${currentPage} / ${totalPages}</span>
-                        <button class="btn-page" onclick="changePage(1)" ${currentPage === totalPages ? 'disabled' : ''}>
-                            ${isAmharic ? 'ቀጣይ' : 'Next'} <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    </div>
-                `;
+                html += `<div class="pagination"><button class="btn-page" onclick="changePage(-1)" ${currentPage===1?'disabled':''}><i class="fa-solid fa-chevron-left"></i> ${isAmharic?'ቀደመ':'Prev'}</button><span style="font-weight:600;">${currentPage} / ${totalPages}</span><button class="btn-page" onclick="changePage(1)" ${currentPage===totalPages?'disabled':''}>${isAmharic?'ቀጣይ':'Next'} <i class="fa-solid fa-chevron-right"></i></button></div>`;
             }
-
             container.innerHTML = html;
-
-            document.querySelectorAll('.book-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const bookId = card.getAttribute('data-id');
-                    const book = filteredBooks.find(b => String(b.id) === String(bookId));
-                    if (book) openBookModal(book);
-                });
-            });
+            document.querySelectorAll('.book-card').forEach(card => card.addEventListener('click', () => { const bookId = card.getAttribute('data-id'); const book = filteredBooks.find(b => String(b.id) === String(bookId)); if (book) openBookModal(book); }));
         }
 
-        function selectCategory(categoryName) {
-            selectedCategory = categoryName;
-            currentView = 'catalog';
-            currentPage = 1;
-            filteredBooks = allBooks.filter(b => b.category === categoryName);
-            renderView();
-            window.scrollTo({ top: document.getElementById('mainContent').offsetTop - 100, behavior: 'smooth' });
-        }
+        function selectCategory(categoryName) { selectedCategory = categoryName; currentView = 'catalog'; currentPage = 1; filteredBooks = allBooks.filter(b => b.category === categoryName); renderView(); window.scrollTo({top: document.getElementById('mainContent').offsetTop - 100, behavior:'smooth'}); }
+        function goHome() { currentView = 'categories'; selectedCategory = ''; document.getElementById('searchInput').value = ''; renderView(); window.scrollTo({top:0, behavior:'smooth'}); }
+        function handleSearch() { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => { const query = document.getElementById('searchInput').value.toLowerCase().trim(); if (!query) { if (currentView === 'search') goHome(); return; } currentView = 'search'; currentPage = 1; selectedCategory = 'Search Results'; filteredBooks = allBooks.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query) || b.category.toLowerCase().includes(query)); renderView(); }, 300); }
+        function changePage(delta) { currentPage += delta; renderView(); window.scrollTo({top: document.getElementById('mainContent').offsetTop - 100, behavior:'smooth'}); }
+        function toggleLang() { isAmharic = !isAmharic; document.getElementById('langToggle').innerHTML = isAmharic ? '🌐 English' : '🌐 አማርኛ'; document.querySelectorAll('[data-en]').forEach(el => el.innerText = isAmharic ? el.getAttribute('data-am') : el.getAttribute('data-en')); document.getElementById('searchInput').placeholder = isAmharic ? 'የመጽሐፍ ስም ወይም ደራሲ ይፈልጉ...' : 'Search any book title or author...'; renderView(); }
 
-        function goHome() {
-            currentView = 'categories';
-            selectedCategory = '';
-            document.getElementById('searchInput').value = '';
-            renderView();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function handleSearch() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const query = document.getElementById('searchInput').value.toLowerCase().trim();
-                
-                if (!query) {
-                    if (currentView === 'search') goHome();
-                    return;
-                }
-
-                currentView = 'search';
-                currentPage = 1;
-                selectedCategory = 'Search Results';
-
-                filteredBooks = allBooks.filter(b => 
-                    b.title.toLowerCase().includes(query) || 
-                    b.author.toLowerCase().includes(query) || 
-                    b.category.toLowerCase().includes(query)
-                );
-
-                renderView();
-            }, 300);
-        }
-
-        function changePage(delta) {
-            currentPage += delta;
-            renderView();
-            window.scrollTo({ top: document.getElementById('mainContent').offsetTop - 100, behavior: 'smooth' });
-        }
-
-        function toggleLang() {
-            isAmharic = !isAmharic;
-            document.getElementById('langToggle').innerHTML = isAmharic ? '🌐 English' : '🌐 አማርኛ';
-            
-            document.querySelectorAll('[data-en]').forEach(el => {
-                el.innerText = isAmharic ? el.getAttribute('data-am') : el.getAttribute('data-en');
-            });
-
-            document.getElementById('searchInput').placeholder = isAmharic 
-                ? 'የመጽሐፍ ስም ወይም ደራሲ ይፈልጉ...' 
-                : 'Search any book title or author...';
-
-            renderView(); 
-        }
-
-        // --- Modal Functions ---
         function openBookModal(book) {
             document.getElementById('modalCover').src = book.image;
             document.getElementById('modalTitle').innerText = book.title;
             document.getElementById('modalAuthor').innerText = (isAmharic ? 'በ' : 'by') + ' ' + book.author + ' · ' + book.category;
-
             const descEl = document.getElementById('modalDescription');
-            if (book.description && book.description.trim() !== '') {
-                descEl.innerText = book.description;
-                descEl.style.display = 'block';
-            } else {
-                descEl.innerText = '';
-                descEl.style.display = 'none';
-            }
-
+            if (book.description && book.description.trim() !== '') { descEl.innerText = book.description; descEl.style.display = 'block'; } else { descEl.innerText = ''; descEl.style.display = 'none'; }
             const metaItems = [
-                { label: isAmharic ? 'ቋንቋ' : 'Language', value: book.language },
-                { label: isAmharic ? 'ቅርጸት' : 'Format', value: book.format },
-                { label: isAmharic ? 'ገጾች' : 'Pages', value: formatPages(book.pages) },
-                { label: isAmharic ? 'ዓመት' : 'Year', value: book.year },
-                { label: isAmharic ? 'ዋጋ' : 'Price', value: book.price }
+                { label: isAmharic?'ቋንቋ':'Language', value: book.language },
+                { label: isAmharic?'ቅርጸት':'Format', value: book.format },
+                { label: isAmharic?'ገጾች':'Pages', value: formatPages(book.pages) },
+                { label: isAmharic?'ዓመት':'Year', value: book.year },
+                { label: isAmharic?'ዋጋ':'Price', value: book.price }
             ];
-
-            document.getElementById('modalMeta').innerHTML = metaItems.map(item => `
-                <div class="meta-item">
-                    <div class="meta-label">${item.label}</div>
-                    <div class="meta-value">${item.value || 'N/A'}</div>
-                </div>
-            `).join('');
-
-            // Set the modal Buy Now link
-            document.getElementById('modalOrderBtn').href = buildTelegramLink(book);
-
+            document.getElementById('modalMeta').innerHTML = metaItems.map(item => `<div class="meta-item"><div class="meta-label">${item.label}</div><div class="meta-value">${item.value || 'N/A'}</div></div>`).join('');
+            document.getElementById('modalOrderBtn').onclick = function(e) { handleBuyClick(book, e); };
             document.getElementById('bookModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
-        function closeBookModal() {
-            document.getElementById('bookModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function closeModalOnBackdrop(event) {
-            if (event.target === document.getElementById('bookModal')) {
-                closeBookModal();
-            }
-        }
-
+        function closeBookModal() { document.getElementById('bookModal').classList.remove('active'); document.body.style.overflow = ''; }
+        function closeModalOnBackdrop(event) { if (event.target === document.getElementById('bookModal')) closeBookModal(); }
         window.onload = initApp;
     </script>
 </body>
