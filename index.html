@@ -96,7 +96,7 @@
         </div>
     </div>
     <script>
-        const BOT_USERNAME = "Pinnah_Books_Order_Bot"; // ✅ Correct bot username (no @)
+        const BOT_USERNAME = "Pinnah_Books_Order_Bot"; // ✅ Your actual bot username (no @)
         const TELEGRAM_CONTACT = "PBSA001";
         const BOOKS_PER_PAGE = 24;
         let allBooks = [], filteredBooks = [], categoryMap = {};
@@ -111,9 +111,8 @@
         }
 
         function buildBotLink(book) {
-            const order = `Title: ${book.title}\nAuthor: ${book.author}\nID: ${book.id}\nCategory: ${book.category}\nFormat: ${book.format || 'N/A'}\nLanguage: ${book.language || 'N/A'}\nPages: ${formatPages(book.pages)}\nYear: ${book.year || 'N/A'}\nPrice: ${book.price || 'N/A'}`;
-            const encoded = encodeURIComponent(order);
-            return `https://t.me/${BOT_USERNAME}?start=${encoded}`;
+            // ✅ SEND ONLY THE BOOK ID to avoid Telegram's 64‑char limit.
+            return `https://t.me/${BOT_USERNAME}?start=${book.id}`;
         }
 
         async function initApp() {
@@ -124,11 +123,11 @@
                 allBooks = rawData.map((b, index) => {
                     const id = b.id || index + 1;
                     
-                    // ✅ Fix for cover_image and coverImage keys
+                    // ✅ Cover image: handle cover_image, coverImage, etc.
                     let rawImg = b.cover_image || b.coverImage || b.image || b.Image || b.cover || b.Cover || b.i || `BK-${String(id).padStart(5, '0')}.webp`;
                     let fullImagePath = rawImg.startsWith('covers/') ? rawImg : `covers/${rawImg}`;
 
-                    // ✅ Category fallbacks
+                    // ✅ Category: handle many common key names
                     let cat = b.category || b.Category || b['Category Name'] || b.Category_Name || b.category_name || b.c || b.cat || b.genre || b.subject || 'General Archive';
 
                     return {
