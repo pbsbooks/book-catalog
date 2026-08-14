@@ -9,7 +9,6 @@ catalog = []
 for idx, row in df.iterrows():
     book_id = row.get("Book ID", idx + 1)
     
-    # Handle standard zero-padded webp filenames based on ID
     if pd.notna(book_id):
         try:
             cover_filename = f"BK-{int(book_id):05d}.webp"
@@ -18,7 +17,6 @@ for idx, row in df.iterrows():
     else:
         cover_filename = "placeholder.webp"
 
-    # Fallback to placeholder if file doesn't exist locally
     cover_path = os.path.join("covers", cover_filename)
     final_cover = cover_filename if os.path.exists(cover_path) else "placeholder.webp"
 
@@ -39,3 +37,4 @@ with open("catalog.json", "w") as f:
     json.dump(catalog, f, indent=2)
 
 print(f"Successfully created catalog.json with {len(catalog)} entries.")
+
