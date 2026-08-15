@@ -4,21 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pinnah Book Store | Premium Digital Archive</title>
+    <link rel="preload" as="image" href="Home-page.png" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color:#f8fafc; --surface:#fff; --primary:#0b3154; --accent:#d4af37;
-            --text-main:#334155; --text-muted:#64748b; --border:#e2e8f0;
-            --shadow-sm:0 1px 3px rgba(0,0,0,0.1); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.15);
+            --bg-color:#f8fafc; 
+            --surface:#fff; 
+            --primary:#0b3154; 
+            --accent:#d4af37;
+            --text-main:#334155; 
+            --text-muted:#64748b; 
+            --border:#e2e8f0;
+            --shadow-sm:0 1px 3px rgba(0,0,0,0.1); 
+            --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.15);
             --transition:all 0.3s ease;
         }
         body.dark-mode {
-            --bg-color:#0f172a; --surface:#1e293b; --primary:#0b3154; --accent:#d4af37;
-            --text-main:#e2e8f0; --text-muted:#94a3b8; --border:#334155;
-            --shadow-sm:0 1px 3px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.5);
+            --bg-color:#0f172a; 
+            --surface:#1e293b; 
+            --primary:#4a90d9;   /* Lighter blue for headings */
+            --accent:#d4af37;    /* Gold accent remains */
+            --text-main:#e2e8f0; 
+            --text-muted:#94a3b8; 
+            --border:#334155;
+            --shadow-sm:0 1px 3px rgba(0,0,0,0.3); 
+            --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.5);
         }
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
         body { background:var(--bg-color); color:var(--text-main); -webkit-font-smoothing:antialiased; transition:var(--transition); }
@@ -30,7 +43,7 @@
         .btn-outline { border:2px solid var(--primary); background:transparent; color:var(--primary); padding:0.5rem 1rem; border-radius:8px; font-weight:600; cursor:pointer; transition:var(--transition); }
         .btn-outline:hover { background:var(--primary); color:#fff; }
         .btn-outline i { font-size:1.1rem; }
-        .hero { padding:5rem 5%; text-align:center; background:linear-gradient(rgba(11,49,84,0.7), rgba(11,49,84,0.85)), url('Home-page.png'); background-size:cover; background-position:center; color:#fff; display:flex; flex-direction:column; align-items:center; }
+        .hero { padding:5rem 5%; text-align:center; background:linear-gradient(rgba(11,49,84,0.7), rgba(11,49,84,0.85)), url('Home-page.png'); background-size:cover; background-position:center; background-color:#0b3154; color:#fff; display:flex; flex-direction:column; align-items:center; }
         .hero-logo { width:200px; height:auto; margin-bottom:1.5rem; object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); transition: transform 0.3s ease; }
         .hero-logo:hover { transform: scale(1.05); }
         .hero h1 { color:#fff; font-size:3rem; font-weight:900; margin-bottom:0.8rem; }
@@ -132,6 +145,18 @@
         let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
         let sortOrder = 'default';
 
+        // Sanitize numeric fields to avoid "nan"
+        function sanitizeNumber(value) {
+            if (value === null || value === undefined || value === '') return 'N/A';
+            const str = String(value).toLowerCase();
+            if (str === 'nan' || str === 'n/a') return 'N/A';
+            const num = Number(value);
+            if (!isNaN(num) && isFinite(num)) {
+                return Number.isInteger(num) ? num.toString() : Math.round(num).toString();
+            }
+            return 'N/A';
+        }
+
         // Dark mode toggle
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
@@ -173,11 +198,7 @@
         });
 
         function formatPages(value) {
-            if (value === null || value === undefined || value === '') return 'N/A';
-            const num = Number(value);
-            if (!isNaN(num) && Number.isInteger(num)) return num.toString();
-            if (!isNaN(num)) return Math.round(num).toString();
-            return value.toString();
+            return sanitizeNumber(value);
         }
 
         function buildBotLink(book) {
@@ -202,9 +223,9 @@
                         description: b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || '',
                         language: b.language || b.Language || b.lang || b.Lang || 'N/A',
                         format: b.format || b.Format || b.type || b.Type || b.file_type || b.fileType || b.extension || b.ext || 'N/A',
-                        pages: b.pages || b.Pages || b.page_count || b.pageCount || b.num_pages || b.numPages || 'N/A',
-                        year: b.year || b.Year || b.publication_year || b.publicationYear || b.pub_year || b.pubYear || b.date || b.published || 'N/A',
-                        price: b.price || b.Price || b.cost || b.Cost || b.sale_price || b.salePrice || b.price_ETB || b.priceETB || 'N/A'
+                        pages: sanitizeNumber(b.pages || b.Pages || b.page_count || b.pageCount || b.num_pages || b.numPages),
+                        year: sanitizeNumber(b.year || b.Year || b.publication_year || b.publicationYear || b.pub_year || b.pubYear || b.date || b.published),
+                        price: sanitizeNumber(b.price || b.Price || b.cost || b.Cost || b.sale_price || b.salePrice || b.price_ETB || b.priceETB)
                     };
                 });
                 categoryMap = {};
