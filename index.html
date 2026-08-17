@@ -25,8 +25,8 @@
         body.dark-mode {
             --bg-color:#0f172a; 
             --surface:#1e293b; 
-            --primary:#4a90d9;   
-            --accent:#d4af37;    
+            --primary:#4a90d9;   /* Lighter blue for headings */
+            --accent:#d4af37;    /* Gold accent remains */
             --text-main:#e2e8f0; 
             --text-muted:#94a3b8; 
             --border:#334155;
@@ -296,8 +296,19 @@
                     };
                 });
 
-                // Build featuredBooks from hardcoded titles
-                featuredBooks = allBooks.filter(book => FEATURED_TITLES.includes(book.title.trim()));
+                // Build featuredBooks from hardcoded titles (case-insensitive, deduplicated)
+                const seenIds = new Set();
+                featuredBooks = [];
+                for (const rawTitle of FEATURED_TITLES) {
+                    const target = rawTitle.trim().toLowerCase();
+                    const match = allBooks.find(book => 
+                        book.title.trim().toLowerCase() === target && !seenIds.has(book.id)
+                    );
+                    if (match) {
+                        featuredBooks.push(match);
+                        seenIds.add(match.id);
+                    }
+                }
 
                 categoryMap = {};
                 allBooks.forEach(book => { 
