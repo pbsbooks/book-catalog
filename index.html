@@ -25,8 +25,8 @@
         body.dark-mode {
             --bg-color:#0f172a; 
             --surface:#1e293b; 
-            --primary:#4a90d9;   /* Lighter blue for headings */
-            --accent:#d4af37;    /* Gold accent remains */
+            --primary:#4a90d9;   
+            --accent:#d4af37;    
             --text-main:#e2e8f0; 
             --text-muted:#94a3b8; 
             --border:#334155;
@@ -43,29 +43,44 @@
         .btn-outline { border:2px solid var(--primary); background:transparent; color:var(--primary); padding:0.5rem 1rem; border-radius:8px; font-weight:600; cursor:pointer; transition:var(--transition); }
         .btn-outline:hover { background:var(--primary); color:#fff; }
         .btn-outline i { font-size:1.1rem; }
-        .hero { padding:5rem 5%; text-align:center; background:linear-gradient(rgba(11,49,84,0.7), rgba(11,49,84,0.85)), url('Home-page.png'); background-size:cover; background-position:center; background-color:#0b3154; color:#fff; display:flex; flex-direction:column; align-items:center; }
+        .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:2rem; position:relative; background:linear-gradient(rgba(252,251,250,0.65), rgba(252,251,250,0.75)), url('Home-page.png'); background-size:cover; background-position:center; background-attachment:fixed; color:#fff; }
         .hero-logo { width:200px; height:auto; margin-bottom:1.5rem; object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); transition: transform 0.3s ease; }
         .hero-logo:hover { transform: scale(1.05); }
-        .hero h1 { color:#fff; font-size:3rem; font-weight:900; margin-bottom:0.8rem; }
-        .hero p { color:#cbd5e1; font-size:1.1rem; max-width:650px; margin:0 auto 2.5rem; line-height:1.6; }
+        .hero h1 { color:#0b3154; font-size:3.5rem; font-weight:900; margin-bottom:0.8rem; }
+        .hero p { color:#1e293b; font-size:1.2rem; max-width:650px; margin:0 auto 2.5rem; line-height:1.6; font-weight:600; }
         .search-container { width:100%; max-width:700px; margin:0 auto; position:relative; }
-        .search-input { width:100%; padding:1.2rem 1.5rem 1.2rem 3.5rem; font-size:1.1rem; border:3px solid transparent; border-radius:50px; box-shadow:0 15px 35px rgba(0,0,0,0.2); outline:none; transition:var(--transition); }
+        .search-input { width:100%; padding:1.2rem 1.5rem 1.2rem 3.5rem; font-size:1.1rem; border:3px solid transparent; border-radius:50px; box-shadow:0 15px 35px rgba(0,0,0,0.2); outline:none; transition:var(--transition); background:#fff; color:#0b3154; }
         .search-input:focus { transform:scale(1.02); border-color:var(--accent); }
         .search-icon { position:absolute; left:1.5rem; top:50%; transform:translateY(-50%); color:var(--primary); font-size:1.2rem; }
         .search-clear { position:absolute; right:1.2rem; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:var(--text-muted); font-size:1.2rem; display:none; }
         .search-clear.show { display:block; }
+        .scroll-indicator { margin-top:2rem; font-size:1rem; color:#0b3154; cursor:pointer; animation:bounce 2s infinite; }
+        @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0);} 40%{transform:translateY(-10px);} 60%{transform:translateY(-5px);} }
         .container { padding:3rem 5%; max-width:1400px; margin:0 auto; }
-        .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2.5rem; padding-bottom:1rem; border-bottom:2px solid var(--border); flex-wrap:wrap; gap:1rem; }
+        .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; padding-bottom:1rem; border-bottom:2px solid var(--border); flex-wrap:wrap; gap:1rem; }
+        .section-header h2 { font-size:2.5rem; }
         .back-btn { background:var(--surface); border:1px solid var(--border); padding:0.6rem 1.2rem; border-radius:50px; cursor:pointer; font-weight:600; color:var(--primary); transition:var(--transition); }
         .back-btn:hover { background:var(--primary); color:#fff; }
         .sort-container { display:flex; align-items:center; gap:0.5rem; }
         .sort-container label { font-weight:600; color:var(--text-muted); }
         .sort-select { padding:0.5rem 1rem; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-main); cursor:pointer; }
         .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:2rem; }
-        .category-card { background:var(--surface); border-radius:16px; padding:2.5rem 2rem; box-shadow:var(--shadow-sm); border:1px solid var(--border); cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center; gap:1rem; transition:var(--transition); }
+        .category-card { background:var(--surface); border-radius:16px; padding:2rem; box-shadow:var(--shadow-sm); border:1px solid var(--border); cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center; gap:1rem; transition:var(--transition); }
         .category-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-lg); border-color:var(--accent); }
         .category-icon { font-size:2.5rem; color:var(--primary); background:#f1f5f9; width:70px; height:70px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
         .book-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:2.5rem; }
+        .horizontal-scroll {
+            display:flex;
+            overflow-x:auto;
+            gap:1.5rem;
+            padding-bottom:1rem;
+            scroll-snap-type:x mandatory;
+            -webkit-overflow-scrolling:touch;
+        }
+        .horizontal-scroll .book-card {
+            min-width:180px;
+            scroll-snap-align:start;
+        }
         .book-card { background:var(--surface); border-radius:16px; padding:1.5rem; box-shadow:var(--shadow-sm); border:1px solid var(--border); display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer; transition:var(--transition); position:relative; }
         .book-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-lg); border-color:var(--accent); }
         .book-cover-container { width:140px; height:200px; margin-bottom:1.5rem; box-shadow:5px 10px 20px rgba(0,0,0,0.15); border-radius:4px 8px 8px 4px; overflow:hidden; background:var(--bg-color); position:relative; }
@@ -99,7 +114,7 @@
         #backToTop { position:fixed; bottom:2rem; right:2rem; background:var(--primary); color:#fff; border:none; width:50px; height:50px; border-radius:50%; cursor:pointer; font-size:1.2rem; box-shadow:var(--shadow-lg); display:none; align-items:center; justify-content:center; z-index:999; transition:var(--transition); }
         #backToTop.show { display:flex; }
         #backToTop:hover { background:var(--accent); color:var(--primary); }
-        @media (max-width:768px) { .hero h1 { font-size:2.2rem; } .hero-logo { width:150px; } .modal-cover { width:150px; height:210px; } }
+        @media (max-width:768px) { .hero h1 { font-size:2.6rem; } .hero-logo { width:150px; } .modal-cover { width:150px; height:210px; } }
     </style>
 </head>
 <body>
@@ -119,6 +134,9 @@
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" id="searchInput" class="search-input" placeholder="Search any book title or author..." oninput="handleSearch()">
             <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+        </div>
+        <div class="scroll-indicator" onclick="document.getElementById('mainContent').scrollIntoView();">
+            <i class="fa-solid fa-chevron-down"></i> Scroll to Explore
         </div>
     </header>
     <main class="container" id="mainContent">
@@ -141,11 +159,34 @@
         const BOT_USERNAME = "Pinnah_Books_Order_Bot";
         const TELEGRAM_CONTACT = "PBSA001";
         const BOOKS_PER_PAGE = 24;
-        let allBooks = [], filteredBooks = [], categoryMap = {};
+
+        // Hardcoded featured titles from old design (will be linked with catalog.json)
+        const FEATURED_TITLES = [
+            "Black's Law Dictionary",
+            "Organic Chemistry",
+            "Architecture: Form, Space, & Order",
+            "Structural Analysis",
+            "Principles of Corporate Finance",
+            "Systematic Theology",
+            "An Introduction to Modern Astrophysics",
+            "Introduction to Flight",
+            "Good to Great",
+            "Principles of Economics",
+            "Harrison's Principles of Internal Medicine",
+            "Calculus, 7th Edition",
+            "The Art of Electronics",
+            "Campbell Biology",
+            "Political Ideologies",
+            "Atomic Habits",
+            "Introduction to Algorithms",
+            "Shigley's Mechanical Engineering Design",
+            "Fundamentals of Physics"
+        ];
+
+        let allBooks = [], filteredBooks = [], categoryMap = {}, featuredBooks = [];
         let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
         let sortOrder = 'default';
 
-        // Sanitize numeric fields to avoid "nan"
         function sanitizeNumber(value) {
             if (value === null || value === undefined || value === '') return 'N/A';
             const str = String(value).toLowerCase();
@@ -157,7 +198,6 @@
             return 'N/A';
         }
 
-        // Dark mode toggle
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -165,7 +205,6 @@
             icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
-        // Load theme
         (function loadTheme() {
             const saved = localStorage.getItem('theme');
             if (saved === 'dark') {
@@ -175,14 +214,12 @@
             }
         })();
 
-        // Back to top
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('backToTop');
             if (window.scrollY > 300) btn.classList.add('show');
             else btn.classList.remove('show');
         });
 
-        // Clear search
         function clearSearch() {
             document.getElementById('searchInput').value = '';
             document.getElementById('searchClear').classList.remove('show');
@@ -197,12 +234,42 @@
             }
         });
 
-        function formatPages(value) {
-            return sanitizeNumber(value);
+        function formatPages(value) { return sanitizeNumber(value); }
+        function buildBotLink(book) { return `https://t.me/${BOT_USERNAME}?start=${book.id}`; }
+
+        function bookCardHTML(book) {
+            const orderText = isAmharic ? 'ግዛ' : 'Buy Now';
+            const safeImage = encodeURI(book.image);
+            const botLink = buildBotLink(book);
+            const price = book.price !== 'N/A' ? book.price : '';
+            return `
+                <div class="book-card" data-id="${book.id}">
+                    <div class="book-cover-container">
+                        <img src="${safeImage}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'">
+                        ${price ? `<div class="book-price">${price}</div>` : ''}
+                    </div>
+                    <div class="book-category">${book.category}</div>
+                    <h3 class="book-title" title="${book.title}">${book.title}</h3>
+                    <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
+                    <a href="${botLink}" target="_blank" class="btn-order" onclick="event.stopPropagation()">
+                        <i class="fa-brands fa-telegram"></i> ${orderText}
+                    </a>
+                </div>`;
         }
 
-        function buildBotLink(book) {
-            return `https://t.me/${BOT_USERNAME}?start=${book.id}`;
+        function attachBookCardEvents() {
+            document.querySelectorAll('.book-card').forEach(card => {
+                card.removeEventListener('click', openModalFromCard);
+                card.addEventListener('click', openModalFromCard);
+            });
+        }
+
+        function openModalFromCard(e) {
+            const card = e.currentTarget;
+            const bookId = card.getAttribute('data-id');
+            let book = filteredBooks.find(b => String(b.id) === String(bookId));
+            if (!book) book = allBooks.find(b => String(b.id) === String(bookId));
+            if (book) openBookModal(book);
         }
 
         async function initApp() {
@@ -228,11 +295,16 @@
                         price: sanitizeNumber(b.price || b.Price || b.cost || b.Cost || b.sale_price || b.salePrice || b.price_ETB || b.priceETB)
                     };
                 });
+
+                // Build featuredBooks from hardcoded titles
+                featuredBooks = allBooks.filter(book => FEATURED_TITLES.includes(book.title.trim()));
+
                 categoryMap = {};
                 allBooks.forEach(book => { 
                     const cat = book.category; 
                     categoryMap[cat] = (categoryMap[cat] || 0) + 1; 
                 });
+
                 renderView();
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
@@ -245,7 +317,21 @@
 
         function renderCategoriesView() {
             const container = document.getElementById('mainContent');
-            let html = `
+            let html = '';
+
+            // Handpicked Spotlights horizontal section
+            if (featuredBooks.length > 0) {
+                html += `
+                    <div class="section-header">
+                        <h2>${isAmharic ? 'የተመረጡ መጻሕፍት' : 'Handpicked Spotlights'}</h2>
+                    </div>
+                    <div class="horizontal-scroll">
+                        ${featuredBooks.map(book => bookCardHTML(book)).join('')}
+                    </div>`;
+            }
+
+            // Categories section
+            html += `
                 <div class="section-header">
                     <h2>${isAmharic ? 'የመጽሐፍ ምድቦች' : 'Browse Categories'}</h2>
                     <span style="color:var(--text-muted); font-weight:600;">${Object.keys(categoryMap).length} ${isAmharic ? 'ምድቦች' : 'Categories Available'}</span>
@@ -260,7 +346,9 @@
                     </div>`;
             }
             html += `</div>`;
+
             container.innerHTML = html;
+            attachBookCardEvents();
             document.querySelectorAll('.category-card').forEach(card => card.addEventListener('click', () => selectCategory(card.getAttribute('data-category'))));
         }
 
@@ -320,25 +408,7 @@
             }
 
             html += `<div class="book-grid">`;
-            booksToShow.forEach(book => {
-                const orderText = isAmharic ? 'ግዛ' : 'Buy Now';
-                const safeImage = encodeURI(book.image);
-                const botLink = buildBotLink(book);
-                const price = book.price !== 'N/A' ? book.price : '';
-                html += `
-                    <div class="book-card" data-id="${book.id}">
-                        <div class="book-cover-container">
-                            <img src="${safeImage}" alt="Cover" class="book-cover" loading="lazy" onerror="this.src='https://placehold.co/400x600/e2e8f0/64748b?text=No+Cover'">
-                            ${price ? `<div class="book-price">${price}</div>` : ''}
-                        </div>
-                        <div class="book-category">${book.category}</div>
-                        <h3 class="book-title" title="${book.title}">${book.title}</h3>
-                        <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
-                        <a href="${botLink}" target="_blank" class="btn-order" onclick="event.stopPropagation()">
-                            <i class="fa-brands fa-telegram"></i> ${orderText}
-                        </a>
-                    </div>`;
-            });
+            booksToShow.forEach(book => { html += bookCardHTML(book); });
             html += `</div>`;
 
             if (totalPages > 1) {
@@ -355,21 +425,10 @@
             }
             
             container.innerHTML = html;
-            
-            document.querySelectorAll('.book-card').forEach(card => {
-                card.addEventListener('click', () => { 
-                    const bookId = card.getAttribute('data-id'); 
-                    const book = filteredBooks.find(b => String(b.id) === String(bookId)); 
-                    if (book) openBookModal(book); 
-                });
-            });
+            attachBookCardEvents();
         }
 
-        function changeSortOrder(order) {
-            sortOrder = order;
-            renderCatalogView();
-        }
-
+        function changeSortOrder(order) { sortOrder = order; renderCatalogView(); }
         function selectCategory(categoryName) { 
             selectedCategory = categoryName; 
             currentView = 'catalog'; 
@@ -378,7 +437,6 @@
             renderView(); 
             window.scrollTo({top: document.getElementById('mainContent').offsetTop - 100, behavior:'smooth'}); 
         }
-
         function goHome() { 
             currentView = 'categories'; 
             selectedCategory = ''; 
@@ -387,7 +445,6 @@
             renderView(); 
             window.scrollTo({top:0, behavior:'smooth'}); 
         }
-
         function handleSearch() { 
             clearTimeout(searchTimeout); 
             searchTimeout = setTimeout(() => { 
@@ -404,13 +461,11 @@
                 renderView(); 
             }, 300); 
         }
-
         function changePage(delta) { 
             currentPage += delta; 
             renderView(); 
             window.scrollTo({top: document.getElementById('mainContent').offsetTop - 100, behavior:'smooth'}); 
         }
-
         function toggleLang() { 
             isAmharic = !isAmharic; 
             document.getElementById('langToggle').innerHTML = isAmharic ? '🌐 English' : '🌐 አማርኛ'; 
@@ -418,12 +473,10 @@
             document.getElementById('searchInput').placeholder = isAmharic ? 'የመጽሐፍ ስም ወይም ደራሲ ይፈልጉ...' : 'Search any book title or author...'; 
             renderView(); 
         }
-
         function openBookModal(book) {
             document.getElementById('modalCover').src = book.image;
             document.getElementById('modalTitle').innerText = book.title;
             document.getElementById('modalAuthor').innerText = (isAmharic ? 'በ' : 'by') + ' ' + book.author + ' · ' + book.category;
-            
             const descEl = document.getElementById('modalDescription');
             if (book.description && book.description.trim() !== '') { 
                 descEl.innerText = book.description; 
@@ -432,7 +485,6 @@
                 descEl.innerText = ''; 
                 descEl.style.display = 'none'; 
             }
-            
             const metaItems = [
                 { label: isAmharic ? 'ቋንቋ' : 'Language', value: book.language },
                 { label: isAmharic ? 'ቅርጸት' : 'Format', value: book.format },
@@ -440,34 +492,27 @@
                 { label: isAmharic ? 'ዓመት' : 'Year', value: book.year },
                 { label: isAmharic ? 'ዋጋ' : 'Price', value: book.price }
             ];
-            
             document.getElementById('modalMeta').innerHTML = metaItems.map(item => `
                 <div class="meta-item">
                     <div class="meta-label">${item.label}</div>
                     <div class="meta-value">${item.value || 'N/A'}</div>
                 </div>`).join('');
-                
             document.getElementById('modalOrderBtn').href = buildBotLink(book);
             document.getElementById('bookModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
         function closeBookModal() { 
             document.getElementById('bookModal').classList.remove('active'); 
             document.body.style.overflow = ''; 
         }
-
         function closeModalOnBackdrop(event) { 
             if (event.target === document.getElementById('bookModal')) closeBookModal(); 
         }
-
-        // Close modal on Esc key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && document.getElementById('bookModal').classList.contains('active')) {
                 closeBookModal();
             }
         });
-
         window.onload = initApp;
     </script>
 </body>
