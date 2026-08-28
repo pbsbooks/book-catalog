@@ -177,6 +177,55 @@
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
+        /* New styles for back side */
+        .back-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        .back-cover-container {
+            width: 60px;
+            height: 80px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .back-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .back-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .back-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        .back-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .back-author {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
         .flip-card-back .book-description {
             font-size: 0.85rem;
             color: var(--text-main);
@@ -268,7 +317,6 @@
         const BOOKS_PER_PAGE = 24;
 
         // ====== FEATURED BOOKS CONFIGURATION ======
-        // Option 1: Use specific book titles (match with catalog.json titles)
         const FEATURED_TITLES = [
             "Black's Law Dictionary",
             "Organic Chemistry",
@@ -290,8 +338,7 @@
             "Shigley's Mechanical Engineering Design",
             "Fundamentals of Physics"
         ];
-        // Option 2: Use specific book IDs (more reliable). If you know the IDs, fill this array and leave FEATURED_TITLES empty.
-        const FEATURED_IDS = []; // e.g., [1, 5, 10]
+        const FEATURED_IDS = [];
 
         let allBooks = [], filteredBooks = [], categoryMap = {}, featuredBooks = [];
         let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
@@ -372,6 +419,16 @@
                             <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
                         </div>
                         <div class="flip-card-back">
+                            <div class="back-top">
+                                <div class="back-cover-container">
+                                    <img src="${safeImage}" alt="Cover" class="back-cover" loading="lazy" onerror="this.src='https://placehold.co/60x80/e2e8f0/64748b?text=?'">
+                                </div>
+                                <div class="back-info">
+                                    ${price ? `<div class="back-price">${price} ETB</div>` : ''}
+                                    <div class="back-title">${book.title}</div>
+                                    <div class="back-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
+                                </div>
+                            </div>
                             ${description ? `<div class="book-description">${description}</div>` : ''}
                             <div class="meta-grid">
                                 ${metaItems.map(item => `<div class="meta-item"><strong>${item.label}:</strong> ${item.value || 'N/A'}</div>`).join('')}
@@ -389,7 +446,6 @@
                 const response = await fetch('catalog.json');
                 const rawData = await response.json();
                 allBooks = rawData.map((b, index) => {
-                    // Map your exact keys
                     const id = b['Book ID'] || b.id || index + 1;
                     const title = b['Title'] || b.title || b.t || b.name || `Book #${id}`;
                     const author = b['Author(S)'] || b.author || b.Author || b.a || b.writer || 'Unknown Author';
@@ -419,7 +475,6 @@
                     };
                 });
 
-                // Build featuredBooks
                 if (FEATURED_IDS.length > 0) {
                     featuredBooks = allBooks.filter(book => FEATURED_IDS.includes(Number(book.id)));
                 } else {
@@ -457,7 +512,6 @@
             const container = document.getElementById('mainContent');
             let html = '';
 
-            // Handpicked Spotlights (flip cards)
             if (featuredBooks.length > 0) {
                 html += `
                     <div class="section-header">
@@ -468,7 +522,6 @@
                     </div>`;
             }
 
-            // Mission, Vision & Goals
             html += `
                 <div class="section-header">
                     <h2>${isAmharic ? 'ተልዕኮ፣ ራዕይ እና ግብ' : 'Mission, Vision & Goals'}</h2>
@@ -491,7 +544,6 @@
                     </div>
                 </div>`;
 
-            // Categories section
             html += `
                 <div class="section-header">
                     <h2>${isAmharic ? 'የመጽሐፍ ምድቦች' : 'Browse Categories'}</h2>
