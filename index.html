@@ -115,6 +115,7 @@
             line-height: 1.1;
             text-shadow: 0 4px 12px rgba(0,0,0,0.5);
             margin: 0;
+            color: #fff;
         }
         .hero-tagline {
             font-size: 1.1rem;
@@ -151,6 +152,7 @@
             transform: translateY(-50%);
             color: var(--primary);
             font-size: 1.1rem;
+            z-index: 3;
         }
         .search-clear {
             position: absolute;
@@ -163,8 +165,37 @@
             color: #64748b;
             font-size: 1.1rem;
             display: none;
+            z-index: 3;
         }
         .search-clear.show { display: block; }
+        /* Search suggestions */
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0.5rem;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+        .search-suggestions.show { display: block; }
+        .suggestion-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #334155;
+            transition: background 0.2s;
+            text-align: left;
+        }
+        .suggestion-item:hover {
+            background: #f1f5f9;
+        }
+
         .scroll-indicator {
             margin-top: 2rem;
             font-size: 0.9rem;
@@ -193,19 +224,31 @@
 
         /* ========== BOOK CARDS (FLIP) ========== */
         .book-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:2rem; }
-        .horizontal-scroll {
-            display:flex;
-            overflow-x:auto;
-            gap:1.5rem;
-            padding-bottom:1rem;
-            scroll-snap-type:x mandatory;
-            -webkit-overflow-scrolling:touch;
+
+        /* Infinite marquee for horizontal scroll */
+        .marquee {
+            overflow: hidden;
+            position: relative;
+            width: 100%;
         }
-        .horizontal-scroll .flip-card {
+        .marquee-track {
+            display: flex;
+            gap: 1.5rem;
+            width: max-content;
+            animation: scroll 40s linear infinite;
+        }
+        .marquee:hover .marquee-track {
+            animation-play-state: paused;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee .flip-card {
             flex: 0 0 220px;
             min-width: 220px;
             max-width: 220px;
-            scroll-snap-align:start;
+            scroll-snap-align: start;
         }
         .book-grid .flip-card {
             width: 100%;
@@ -340,7 +383,7 @@
             .hero-title { font-size: 2rem; }
             .hero-tagline { font-size: 1rem; }
             .flip-card { height: 380px; }
-            .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
+            .marquee .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
         }
     </style>
 </head>
@@ -354,10 +397,9 @@
         </div>
     </nav>
 
-    <!-- ========== HERO SLIDER ========== -->
+    <!-- HERO SLIDER -->
     <header class="hero">
         <div class="hero-slider">
-            <!-- Replace the image paths below with your own 5 images -->
             <div class="hero-slide active" style="background-image: url('Home-page.png');"></div>
             <div class="hero-slide" style="background-image: url('hero2.jpg');"></div>
             <div class="hero-slide" style="background-image: url('hero3.jpg');"></div>
@@ -373,8 +415,9 @@
             <p class="hero-tagline" data-en="The Ultimate Digital Archive" data-am="የመጨረሻው ዲጂታል ማህደር">The Ultimate Digital Archive</p>
             <div class="search-container">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="searchInput" class="search-input" placeholder="Search any book title or author..." oninput="handleSearch()">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search any book title or author..." oninput="handleSearchInput()">
                 <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
             </div>
             <div class="scroll-indicator" onclick="document.getElementById('mainContent').scrollIntoView();">
                 <i class="fa-solid fa-chevron-down"></i> <span data-en="Scroll to Explore" data-am="ለማሰስ ወደ ታች ይውረዱ">Scroll to Explore</span>
@@ -398,7 +441,7 @@
         const TELEGRAM_CONTACT = "PBSA001";
         const BOOKS_PER_PAGE = 24;
 
-        // ====== FEATURED BOOKS CONFIGURATION ======
+        // Featured books configuration
         const FEATURED_TITLES = [
             "Black's Law Dictionary",
             "Organic Chemistry",
@@ -420,13 +463,13 @@
             "Shigley's Mechanical Engineering Design",
             "Fundamentals of Physics"
         ];
-        const FEATURED_IDS = [];
+        const FEATURED_IDS = []; // not used
 
         let allBooks = [], filteredBooks = [], categoryMap = {}, featuredBooks = [];
         let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
         let sortOrder = 'default';
 
-        // ====== HERO SLIDER ======
+        // Hero slider
         let heroSlideIndex = 0;
         const heroSlides = document.querySelectorAll('.hero-slide');
         function startHeroSlider() {
@@ -481,19 +524,57 @@
             else btn.classList.remove('show');
         });
 
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('searchClear').classList.remove('show');
-            if (currentView === 'search') goHome();
+        // Search suggestions
+        const searchInput = document.getElementById('searchInput');
+        const searchClear = document.getElementById('searchClear');
+        const searchSuggestions = document.getElementById('searchSuggestions');
+
+        function handleSearchInput() {
+            const query = searchInput.value.trim().toLowerCase();
+            if (query) {
+                searchClear.classList.add('show');
+                const matches = allBooks.filter(b => 
+                    b.title.toLowerCase().includes(query) || 
+                    b.author.toLowerCase().includes(query) || 
+                    b.category.toLowerCase().includes(query)
+                ).slice(0, 8);
+                if (matches.length > 0) {
+                    searchSuggestions.innerHTML = matches.map(book => `
+                        <div class="suggestion-item" data-id="${book.id}">
+                            <strong>${book.title}</strong> – ${book.author}
+                        </div>
+                    `).join('');
+                    searchSuggestions.classList.add('show');
+                    // Add click listeners
+                    document.querySelectorAll('.suggestion-item').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const bookId = item.getAttribute('data-id');
+                            const book = allBooks.find(b => String(b.id) === String(bookId));
+                            if (book) {
+                                openBookModal(book); // use modal? We'll just flip? Actually we removed modal earlier. We can open lightbox or scroll to book? For now, just set search value to title and hide suggestions.
+                                searchInput.value = book.title;
+                                searchSuggestions.classList.remove('show');
+                                searchClear.classList.add('show');
+                                // Optionally navigate to catalog view with that book
+                            }
+                        });
+                    });
+                } else {
+                    searchSuggestions.classList.remove('show');
+                }
+            } else {
+                searchClear.classList.remove('show');
+                searchSuggestions.classList.remove('show');
+            }
         }
 
-        document.getElementById('searchInput').addEventListener('input', function() {
-            if (this.value.trim() !== '') {
-                document.getElementById('searchClear').classList.add('show');
-            } else {
-                document.getElementById('searchClear').classList.remove('show');
-            }
-        });
+        // Clear search
+        function clearSearch() {
+            searchInput.value = '';
+            searchClear.classList.remove('show');
+            searchSuggestions.classList.remove('show');
+            if (currentView === 'search') goHome();
+        }
 
         function formatPages(value) { return sanitizeNumber(value); }
         function buildBotLink(book) { return `https://t.me/${BOT_USERNAME}?start=${book.id}`; }
@@ -584,20 +665,29 @@
                     };
                 });
 
-                if (FEATURED_IDS.length > 0) {
-                    featuredBooks = allBooks.filter(book => FEATURED_IDS.includes(Number(book.id)));
-                } else {
-                    const seenIds = new Set();
-                    featuredBooks = [];
-                    for (const rawTitle of FEATURED_TITLES) {
-                        const target = rawTitle.trim().toLowerCase();
-                        const match = allBooks.find(book => 
-                            book.title.trim().toLowerCase() === target && !seenIds.has(book.id)
-                        );
-                        if (match) {
-                            featuredBooks.push(match);
-                            seenIds.add(match.id);
-                        }
+                // Build featuredBooks, ensuring exactly 19 (or as many as possible)
+                featuredBooks = [];
+                const seenIds = new Set();
+
+                // First add from FEATURED_TITLES (if match)
+                for (const rawTitle of FEATURED_TITLES) {
+                    const target = rawTitle.trim().toLowerCase();
+                    const match = allBooks.find(book => 
+                        book.title.trim().toLowerCase() === target && !seenIds.has(book.id)
+                    );
+                    if (match) {
+                        featuredBooks.push(match);
+                        seenIds.add(match.id);
+                    }
+                }
+
+                // If still less than 19, fill with remaining books
+                if (featuredBooks.length < 19) {
+                    const remaining = allBooks.filter(book => !seenIds.has(book.id));
+                    for (const book of remaining) {
+                        if (featuredBooks.length >= 19) break;
+                        featuredBooks.push(book);
+                        seenIds.add(book.id);
                     }
                 }
 
@@ -623,15 +713,20 @@
             let html = '';
 
             if (featuredBooks.length > 0) {
+                // Build marquee: duplicate featuredBooks to create seamless loop
+                const doubled = [...featuredBooks, ...featuredBooks];
                 html += `
                     <div class="section-header">
                         <h2>${isAmharic ? 'የተመረጡ መጻሕፍት' : 'Handpicked Spotlights'}</h2>
                     </div>
-                    <div class="horizontal-scroll">
-                        ${featuredBooks.map(book => flipCardHTML(book)).join('')}
+                    <div class="marquee">
+                        <div class="marquee-track">
+                            ${doubled.map(book => flipCardHTML(book)).join('')}
+                        </div>
                     </div>`;
             }
 
+            // Mission, Vision & Goals
             html += `
                 <div class="section-header">
                     <h2>${isAmharic ? 'ተልዕኮ፣ ራዕይ እና ግብ' : 'Mission, Vision & Goals'}</h2>
@@ -654,6 +749,7 @@
                     </div>
                 </div>`;
 
+            // Categories
             html += `
                 <div class="section-header">
                     <h2>${isAmharic ? 'የመጽሐፍ ምድቦች' : 'Browse Categories'}</h2>
@@ -761,15 +857,16 @@
         function goHome() { 
             currentView = 'categories'; 
             selectedCategory = ''; 
-            document.getElementById('searchInput').value = ''; 
-            document.getElementById('searchClear').classList.remove('show');
+            searchInput.value = ''; 
+            searchClear.classList.remove('show');
+            searchSuggestions.classList.remove('show');
             renderView(); 
             window.scrollTo({top:0, behavior:'smooth'}); 
         }
         function handleSearch() { 
             clearTimeout(searchTimeout); 
             searchTimeout = setTimeout(() => { 
-                const query = document.getElementById('searchInput').value.toLowerCase().trim(); 
+                const query = searchInput.value.toLowerCase().trim(); 
                 if (!query) { if (currentView === 'search') goHome(); return; } 
                 currentView = 'search'; 
                 currentPage = 1; 
@@ -791,7 +888,7 @@
             isAmharic = !isAmharic; 
             document.getElementById('langToggle').innerHTML = isAmharic ? '🌐 English' : '🌐 አማርኛ'; 
             document.querySelectorAll('[data-en]').forEach(el => el.innerText = isAmharic ? el.getAttribute('data-am') : el.getAttribute('data-en')); 
-            document.getElementById('searchInput').placeholder = isAmharic ? 'የመጽሐፍ ስም ወይም ደራሲ ይፈልጉ...' : 'Search any book title or author...'; 
+            searchInput.placeholder = isAmharic ? 'የመጽሐፍ ስም ወይም ደራሲ ይፈልጉ...' : 'Search any book title or author...'; 
             renderView(); 
         }
 
