@@ -168,7 +168,6 @@
             z-index: 3;
         }
         .search-clear.show { display: block; }
-        /* Search suggestions */
         .search-suggestions {
             position: absolute;
             top: 100%;
@@ -224,27 +223,15 @@
 
         /* ========== BOOK CARDS (FLIP) ========== */
         .book-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:2rem; }
-
-        /* Infinite marquee for horizontal scroll */
-        .marquee {
-            overflow: hidden;
-            position: relative;
-            width: 100%;
-        }
-        .marquee-track {
+        .horizontal-scroll {
             display: flex;
+            overflow-x: auto;
             gap: 1.5rem;
-            width: max-content;
-            animation: scroll 40s linear infinite;
+            padding-bottom: 1rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
         }
-        .marquee:hover .marquee-track {
-            animation-play-state: paused;
-        }
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .marquee .flip-card {
+        .horizontal-scroll .flip-card {
             flex: 0 0 220px;
             min-width: 220px;
             max-width: 220px;
@@ -383,7 +370,7 @@
             .hero-title { font-size: 2rem; }
             .hero-tagline { font-size: 1rem; }
             .flip-card { height: 380px; }
-            .marquee .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
+            .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
         }
     </style>
 </head>
@@ -441,35 +428,35 @@
         const TELEGRAM_CONTACT = "PBSA001";
         const BOOKS_PER_PAGE = 24;
 
-        // Featured books configuration
-        const FEATURED_TITLES = [
-            "Black's Law Dictionary",
-            "Organic Chemistry",
-            "Architecture: Form, Space, & Order",
-            "Structural Analysis",
-            "Principles of Corporate Finance",
-            "Systematic Theology",
-            "An Introduction to Modern Astrophysics",
-            "Introduction to Flight",
-            "Good to Great",
-            "Principles of Economics",
-            "Harrison's Principles of Internal Medicine",
-            "Calculus, 7th Edition",
-            "The Art of Electronics",
-            "Campbell Biology",
-            "Political Ideologies",
-            "Atomic Habits",
-            "Introduction to Algorithms",
-            "Shigley's Mechanical Engineering Design",
-            "Fundamentals of Physics"
+        // ====== FEATURED BOOKS (exact BK IDs) ======
+        const FEATURED_IDS = [
+            "BK-04954",
+            "BK-01507",
+            "BK-00294",
+            "BK-10049",
+            "BK-01918",
+            "BK-00015",
+            "BK-10207",
+            "BK-00863",
+            "BK-00057",
+            "BK-06962",
+            "BK-03065",
+            "BK-06612",
+            "BK-05198",
+            "BK-03187",
+            "BK-01247",
+            "BK-08943",
+            "BK-07188",
+            "BK-02436",
+            "BK-05465",
+            "BK-08007"
         ];
-        const FEATURED_IDS = []; // not used
 
         let allBooks = [], filteredBooks = [], categoryMap = {}, featuredBooks = [];
         let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
         let sortOrder = 'default';
 
-        // Hero slider
+        // ====== HERO SLIDER ======
         let heroSlideIndex = 0;
         const heroSlides = document.querySelectorAll('.hero-slide');
         function startHeroSlider() {
@@ -480,6 +467,7 @@
             }, 5000);
         }
 
+        // ====== UTILITY FUNCTIONS ======
         function sanitizeNumber(value) {
             if (value === null || value === undefined || value === '') return 'N/A';
             const str = String(value).toLowerCase();
@@ -524,20 +512,29 @@
             else btn.classList.remove('show');
         });
 
-        // Search suggestions
         const searchInput = document.getElementById('searchInput');
         const searchClear = document.getElementById('searchClear');
         const searchSuggestions = document.getElementById('searchSuggestions');
 
+        function clearSearch() {
+            searchInput.value = '';
+            searchClear.classList.remove('show');
+            searchSuggestions.classList.remove('show');
+            if (currentView === 'search') goHome();
+        }
+
+        // ====== SEARCH WITH SUGGESTIONS ======
         function handleSearchInput() {
-            const query = searchInput.value.trim().toLowerCase();
+            const query = searchInput.value.trim();
             if (query) {
                 searchClear.classList.add('show');
+
                 const matches = allBooks.filter(b => 
-                    b.title.toLowerCase().includes(query) || 
-                    b.author.toLowerCase().includes(query) || 
-                    b.category.toLowerCase().includes(query)
+                    b.title.toLowerCase().includes(query.toLowerCase()) || 
+                    b.author.toLowerCase().includes(query.toLowerCase()) || 
+                    b.category.toLowerCase().includes(query.toLowerCase())
                 ).slice(0, 8);
+
                 if (matches.length > 0) {
                     searchSuggestions.innerHTML = matches.map(book => `
                         <div class="suggestion-item" data-id="${book.id}">
@@ -545,35 +542,28 @@
                         </div>
                     `).join('');
                     searchSuggestions.classList.add('show');
-                    // Add click listeners
-                    document.querySelectorAll('.suggestion-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            const bookId = item.getAttribute('data-id');
-                            const book = allBooks.find(b => String(b.id) === String(bookId));
-                            if (book) {
-                                openBookModal(book); // use modal? We'll just flip? Actually we removed modal earlier. We can open lightbox or scroll to book? For now, just set search value to title and hide suggestions.
-                                searchInput.value = book.title;
-                                searchSuggestions.classList.remove('show');
-                                searchClear.classList.add('show');
-                                // Optionally navigate to catalog view with that book
-                            }
-                        });
-                    });
                 } else {
                     searchSuggestions.classList.remove('show');
                 }
+
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    currentView = 'search';
+                    currentPage = 1;
+                    selectedCategory = 'Search Results';
+                    filteredBooks = allBooks.filter(b => 
+                        b.title.toLowerCase().includes(query.toLowerCase()) || 
+                        b.author.toLowerCase().includes(query.toLowerCase()) || 
+                        b.category.toLowerCase().includes(query.toLowerCase())
+                    );
+                    renderView();
+                    searchSuggestions.classList.remove('show');
+                }, 300);
             } else {
                 searchClear.classList.remove('show');
                 searchSuggestions.classList.remove('show');
+                if (currentView === 'search') goHome();
             }
-        }
-
-        // Clear search
-        function clearSearch() {
-            searchInput.value = '';
-            searchClear.classList.remove('show');
-            searchSuggestions.classList.remove('show');
-            if (currentView === 'search') goHome();
         }
 
         function formatPages(value) { return sanitizeNumber(value); }
@@ -665,31 +655,10 @@
                     };
                 });
 
-                // Build featuredBooks, ensuring exactly 19 (or as many as possible)
-                featuredBooks = [];
-                const seenIds = new Set();
-
-                // First add from FEATURED_TITLES (if match)
-                for (const rawTitle of FEATURED_TITLES) {
-                    const target = rawTitle.trim().toLowerCase();
-                    const match = allBooks.find(book => 
-                        book.title.trim().toLowerCase() === target && !seenIds.has(book.id)
-                    );
-                    if (match) {
-                        featuredBooks.push(match);
-                        seenIds.add(match.id);
-                    }
-                }
-
-                // If still less than 19, fill with remaining books
-                if (featuredBooks.length < 19) {
-                    const remaining = allBooks.filter(book => !seenIds.has(book.id));
-                    for (const book of remaining) {
-                        if (featuredBooks.length >= 19) break;
-                        featuredBooks.push(book);
-                        seenIds.add(book.id);
-                    }
-                }
+                // Build featuredBooks from FEATURED_IDS
+                featuredBooks = FEATURED_IDS.map(fid => 
+                    allBooks.find(book => String(book.id) === String(fid))
+                ).filter(Boolean);
 
                 categoryMap = {};
                 allBooks.forEach(book => { 
@@ -712,17 +681,14 @@
             const container = document.getElementById('mainContent');
             let html = '';
 
+            // Handpicked Spotlights – user scrollable horizontal
             if (featuredBooks.length > 0) {
-                // Build marquee: duplicate featuredBooks to create seamless loop
-                const doubled = [...featuredBooks, ...featuredBooks];
                 html += `
                     <div class="section-header">
                         <h2>${isAmharic ? 'የተመረጡ መጻሕፍት' : 'Handpicked Spotlights'}</h2>
                     </div>
-                    <div class="marquee">
-                        <div class="marquee-track">
-                            ${doubled.map(book => flipCardHTML(book)).join('')}
-                        </div>
+                    <div class="horizontal-scroll">
+                        ${featuredBooks.map(book => flipCardHTML(book)).join('')}
                     </div>`;
             }
 
