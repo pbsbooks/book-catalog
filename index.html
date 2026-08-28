@@ -230,6 +230,7 @@
             padding-bottom: 1rem;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
         .horizontal-scroll .flip-card {
             flex: 0 0 220px;
@@ -429,28 +430,28 @@
         const BOOKS_PER_PAGE = 24;
 
         // ====== FEATURED BOOKS (exact BK IDs) ======
-const FEATURED_IDS = [
-    "BK-04937",
-    "BK-01780",
-    "BK-00294",
-    "BK-10048",
-    "BK-01918",
-    "BK-00015",
-    "BK-10207",
-    "BK-00863",
-    "BK-00057",
-    "BK-06962",
-    "BK-03065",
-    "BK-06612",
-    "BK-05198",
-    "BK-03187",
-    "BK-01247",
-    "BK-08943",
-    "BK-07188",
-    "BK-02436",
-    "BK-05465",
-    "BK-07982"
-];
+        const FEATURED_IDS = [
+            "BK-04937",
+            "BK-01780",
+            "BK-00294",
+            "BK-10040",
+            "BK-01917",
+            "BK-00015",
+            "BK-10207",
+            "BK-00863",
+            "BK-00057",
+            "BK-06962",
+            "BK-03065",
+            "BK-06612",
+            "BK-05198",
+            "BK-03187",
+            "BK-01247",
+            "BK-08943",
+            "BK-07188",
+            "BK-02436",
+            "BK-05465",
+            "BK-07982"
+        ];
 
         let allBooks = [], filteredBooks = [], categoryMap = {}, featuredBooks = [];
         let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
@@ -467,7 +468,31 @@ const FEATURED_IDS = [
             }, 5000);
         }
 
-        // ====== UTILITY FUNCTIONS ======
+        // ====== AUTO‑SCROLL FOR SPOTLIGHTS ======
+        let spotlightAutoScrollInterval = null;
+        let spotlightPaused = false;
+        const spotlightScroll = () => {
+            const container = document.getElementById('spotlightScroll');
+            if (container && !spotlightPaused) {
+                container.scrollLeft += 1; // slow continuous scroll
+                // loop back to start if near end
+                if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
+                    container.scrollLeft = 0;
+                }
+            }
+        };
+        function startSpotlightAutoScroll() {
+            const container = document.getElementById('spotlightScroll');
+            if (container) {
+                // Pause on hover/touch
+                container.addEventListener('mouseenter', () => spotlightPaused = true);
+                container.addEventListener('mouseleave', () => spotlightPaused = false);
+                container.addEventListener('touchstart', () => spotlightPaused = true);
+                container.addEventListener('touchend', () => spotlightPaused = false);
+                spotlightAutoScrollInterval = setInterval(spotlightScroll, 30);
+            }
+        }
+
         function sanitizeNumber(value) {
             if (value === null || value === undefined || value === '') return 'N/A';
             const str = String(value).toLowerCase();
@@ -523,7 +548,6 @@ const FEATURED_IDS = [
             if (currentView === 'search') goHome();
         }
 
-        // ====== SEARCH WITH SUGGESTIONS ======
         function handleSearchInput() {
             const query = searchInput.value.trim();
             if (query) {
@@ -655,7 +679,6 @@ const FEATURED_IDS = [
                     };
                 });
 
-                // Build featuredBooks from FEATURED_IDS
                 featuredBooks = FEATURED_IDS.map(fid => 
                     allBooks.find(book => String(book.id) === String(fid))
                 ).filter(Boolean);
@@ -668,6 +691,7 @@ const FEATURED_IDS = [
 
                 renderView();
                 startHeroSlider();
+                startSpotlightAutoScroll(); // start auto-scroll
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
             }
@@ -681,13 +705,13 @@ const FEATURED_IDS = [
             const container = document.getElementById('mainContent');
             let html = '';
 
-            // Handpicked Spotlights – user scrollable horizontal
+            // Handpicked Spotlights – user scrollable + auto-scroll
             if (featuredBooks.length > 0) {
                 html += `
                     <div class="section-header">
                         <h2>${isAmharic ? 'የተመረጡ መጻሕፍት' : 'Handpicked Spotlights'}</h2>
                     </div>
-                    <div class="horizontal-scroll">
+                    <div class="horizontal-scroll" id="spotlightScroll">
                         ${featuredBooks.map(book => flipCardHTML(book)).join('')}
                     </div>`;
             }
