@@ -352,7 +352,7 @@
             const safeImage = encodeURI(book.image);
             const botLink = buildBotLink(book);
             const price = book.price !== 'N/A' ? book.price : '';
-            const description = book.description || (isAmharic ? 'ዝርዝር መግለጫ የለም' : 'No description available.');
+            const description = book.description && book.description.trim() !== '' ? book.description : '';
             const metaItems = [
                 { label: isAmharic ? 'ቋንቋ' : 'Language', value: book.language },
                 { label: isAmharic ? 'ቅርጸት' : 'Format', value: book.format },
@@ -372,7 +372,7 @@
                             <div class="book-author">${isAmharic ? 'በ' : 'by'} ${book.author}</div>
                         </div>
                         <div class="flip-card-back">
-                            <div class="book-description">${description}</div>
+                            ${description ? `<div class="book-description">${description}</div>` : ''}
                             <div class="meta-grid">
                                 ${metaItems.map(item => `<div class="meta-item"><strong>${item.label}:</strong> ${item.value || 'N/A'}</div>`).join('')}
                             </div>
@@ -389,22 +389,33 @@
                 const response = await fetch('catalog.json');
                 const rawData = await response.json();
                 allBooks = rawData.map((b, index) => {
-                    const id = b.id || index + 1;
-                    let rawImg = b.cover_image || b.coverImage || b.image || b.Image || b.cover || b.Cover || b.i || `BK-${String(id).padStart(5, '0')}.webp`;
-                    let fullImagePath = rawImg.startsWith('covers/') ? rawImg : `covers/${rawImg}`;
-                    let cat = b.category || b.Category || b['Category Name'] || b.Category_Name || b.category_name || b.c || b.cat || b.genre || b.subject || 'General Archive';
+                    // Map your exact keys
+                    const id = b['Book ID'] || b.id || index + 1;
+                    const title = b['Title'] || b.title || b.t || b.name || `Book #${id}`;
+                    const author = b['Author(S)'] || b.author || b.Author || b.a || b.writer || 'Unknown Author';
+                    const category = b['Category'] || b.category || b.c || b.cat || b.genre || b.subject || 'General Archive';
+                    const price = b['Price (ETB)'] || b.price || b.Price || b.cost || b.Cost || b.sale_price || b.salePrice || b.price_ETB || b.priceETB;
+                    const cover = b['Cover Image'] || b.cover_image || b.coverImage || b.image || b.Image || b.cover || b.Cover || b.i || `BK-${String(id).padStart(5, '0')}.webp`;
+                    const language = b['Language'] || b.language || b.Language || b.lang || b.Lang || 'N/A';
+                    const format = b['Format'] || b.format || b.Format || b.type || b.Type || b.file_type || b.fileType || b.extension || b.ext || 'N/A';
+                    const pages = b['Page Count'] || b.pages || b.Pages || b.page_count || b.pageCount || b.num_pages || b.numPages;
+                    const year = b['Year'] || b.year || b.Year || b.publication_year || b.publicationYear || b.pub_year || b.pubYear || b.date || b.published;
+                    const description = b['Description'] || b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || '';
+
+                    let fullImagePath = cover.startsWith('covers/') ? cover : `covers/${cover}`;
+
                     return {
                         id: id,
-                        title: b.title || b.Title || b.t || b.name || `Book #${id}`,
-                        author: b.author || b.Author || b.a || b.writer || 'Unknown Author',
-                        category: cat,
+                        title: title,
+                        author: author,
+                        category: category,
                         image: fullImagePath,
-                        description: b.description || b.Description || b.desc || b.Desc || b.summary || b.Summary || b.about || b.About || '',
-                        language: b.language || b.Language || b.lang || b.Lang || 'N/A',
-                        format: b.format || b.Format || b.type || b.Type || b.file_type || b.fileType || b.extension || b.ext || 'N/A',
-                        pages: sanitizeNumber(b.pages || b.Pages || b.page_count || b.pageCount || b.num_pages || b.numPages),
-                        year: sanitizeNumber(b.year || b.Year || b.publication_year || b.publicationYear || b.pub_year || b.pubYear || b.date || b.published),
-                        price: sanitizeNumber(b.price || b.Price || b.cost || b.Cost || b.sale_price || b.salePrice || b.price_ETB || b.priceETB)
+                        description: description,
+                        language: language,
+                        format: format,
+                        pages: sanitizeNumber(pages),
+                        year: sanitizeNumber(year),
+                        price: sanitizeNumber(price)
                     };
                 });
 
