@@ -320,7 +320,7 @@
             }, 5000);
         }
 
-        // ====== AUTO-SCROLL FOR SPOTLIGHTS ======
+        // ====== AUTO‑SCROLL FOR SPOTLIGHTS ======
         let spotlightAutoScrollInterval = null;
         let spotlightPaused = false;
 
@@ -335,12 +335,12 @@
 
             spotlightAutoScrollInterval = setInterval(() => {
                 if (!spotlightPaused) {
-                    container.scrollLeft += 2;   // speed in pixels per frame
+                    container.scrollLeft += 2;
                     if (container.scrollLeft >= container.scrollWidth / 2) {
-                        container.scrollLeft = 0; // loop back without animation
+                        container.scrollLeft = 0;
                     }
                 }
-            }, 16); // ~60fps
+            }, 16);
         }
 
         function sanitizeNumber(value) {
@@ -533,6 +533,11 @@
                     allBooks.find(book => String(book.id) === String(fid))
                 ).filter(Boolean);
 
+                // Fallback if none matched
+                if (featuredBooks.length === 0) {
+                    featuredBooks = allBooks.slice(0, 20);
+                }
+
                 categoryMap = {};
                 allBooks.forEach(book => { 
                     const cat = book.category; 
@@ -556,7 +561,6 @@
             let html = '';
 
             if (featuredBooks.length > 0) {
-                // Duplicate the list to create infinite loop
                 const doubledBooks = [...featuredBooks, ...featuredBooks];
                 html += `
                     <div class="section-header">
