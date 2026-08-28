@@ -434,7 +434,7 @@
             "BK-04937",
             "BK-01780",
             "BK-00294",
-            "BK-10040",
+            "BK-10039",
             "BK-01917",
             "BK-00015",
             "BK-10207",
@@ -481,17 +481,24 @@
                 }
             }
         };
-        function startSpotlightAutoScroll() {
-            const container = document.getElementById('spotlightScroll');
-            if (container) {
-                // Pause on hover/touch
-                container.addEventListener('mouseenter', () => spotlightPaused = true);
-                container.addEventListener('mouseleave', () => spotlightPaused = false);
-                container.addEventListener('touchstart', () => spotlightPaused = true);
-                container.addEventListener('touchend', () => spotlightPaused = false);
-                spotlightAutoScrollInterval = setInterval(spotlightScroll, 30);
+      function startSpotlightAutoScroll() {
+    const container = document.getElementById('spotlightScroll');
+    if (container) {
+        // Pause on hover/touch
+        container.addEventListener('mouseenter', () => spotlightPaused = true);
+        container.addEventListener('mouseleave', () => spotlightPaused = false);
+        container.addEventListener('touchstart', () => spotlightPaused = true);
+        container.addEventListener('touchend', () => spotlightPaused = false);
+        spotlightAutoScrollInterval = setInterval(() => {
+            if (!spotlightPaused) {
+                container.scrollLeft += 3;   // <-- Increase this number for faster speed
+                if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
+                    container.scrollLeft = 0;
+                }
             }
-        }
+        }, 16); // ~60fps
+    }
+}
 
         function sanitizeNumber(value) {
             if (value === null || value === undefined || value === '') return 'N/A';
