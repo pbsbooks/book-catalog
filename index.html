@@ -14,7 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ========== GLOBAL ========== */
         :root {
             --bg-color:#f8fafc; 
             --surface:#fff; 
@@ -42,7 +41,6 @@
         body { background:var(--bg-color); color:var(--text-main); -webkit-font-smoothing:antialiased; transition:var(--transition); }
         h1,h2,h3 { font-family:'Playfair Display',serif; color:var(--primary); }
 
-        /* ========== NAV ========== */
         nav { background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); position:sticky; top:0; z-index:100; border-bottom:1px solid var(--border); padding:1rem 5%; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-sm); }
         .brand { font-size:1.5rem; font-weight:700; color:var(--primary); text-decoration:none; display:flex; align-items:center; gap:10px; font-family:'Playfair Display',serif; cursor:pointer; }
         .brand img { height:40px; border-radius:0; }
@@ -228,6 +226,7 @@
         const BOT_USERNAME = "Pinnah_Books_Order_Bot";
         const TELEGRAM_CONTACT = "PBSA001";
         const BOOKS_PER_PAGE = 24;
+        const GOOGLE_FORM_URL = "https://forms.gle/GbMsbSxUSeyUtNfu9";
 
         // ====== FEATURED BOOKS ======
         const FEATURED_IDS = [
@@ -250,30 +249,36 @@
             }, 5000);
         }
 
-        // ====== SPOTLIGHT AUTO‑SCROLL (WORKING) ======
+        // ====== SPOTLIGHT AUTO‑SCROLL (pauses on user interaction) ======
         let spotlightRAF = null;
         let spotlightPaused = false;
+        let userInteracted = false;
+        let userInteractTimer = null;
 
         function startSpotlightAutoScroll() {
             const container = document.getElementById('spotlightScroll');
             if (!container) return;
 
-            // Remove any existing RAF
             if (spotlightRAF) cancelAnimationFrame(spotlightRAF);
 
-            // Pause on hover/touch
             container.addEventListener('mouseenter', () => spotlightPaused = true);
             container.addEventListener('mouseleave', () => spotlightPaused = false);
             container.addEventListener('touchstart', () => spotlightPaused = true);
             container.addEventListener('touchend', () => spotlightPaused = false);
 
-            // Disable smooth scroll for seamless reset
+            container.addEventListener('scroll', () => {
+                userInteracted = true;
+                if (userInteractTimer) clearTimeout(userInteractTimer);
+                userInteractTimer = setTimeout(() => {
+                    userInteracted = false;
+                }, 2000);
+            });
+
             container.style.scrollBehavior = 'auto';
 
             const step = () => {
-                if (!spotlightPaused) {
-                    container.scrollLeft += 2; // speed
-                    // When we reach half (end of first set), jump back to start of first set
+                if (!spotlightPaused && !userInteracted) {
+                    container.scrollLeft += 2;
                     if (container.scrollLeft >= container.scrollWidth / 2) {
                         container.scrollLeft = 0;
                     }
@@ -328,7 +333,6 @@
             else btn.classList.remove('show');
         });
 
-        // ====== SEARCH ======
         const searchInput = document.getElementById('searchInput');
         const searchClear = document.getElementById('searchClear');
         const searchSuggestions = document.getElementById('searchSuggestions');
@@ -344,11 +348,13 @@
             const query = searchInput.value.trim();
             if (query) {
                 searchClear.classList.add('show');
+
                 const matches = allBooks.filter(b => 
                     b.title.toLowerCase().includes(query.toLowerCase()) || 
                     b.author.toLowerCase().includes(query.toLowerCase()) || 
                     b.category.toLowerCase().includes(query.toLowerCase())
                 ).slice(0, 8);
+
                 if (matches.length > 0) {
                     searchSuggestions.innerHTML = matches.map(book => `
                         <div class="suggestion-item" data-id="${book.id}">
@@ -359,6 +365,7 @@
                 } else {
                     searchSuggestions.classList.remove('show');
                 }
+
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
                     currentView = 'search';
@@ -484,7 +491,6 @@
 
                 renderView();
                 startHeroSlider();
-                // Start spotlight auto-scroll after a small delay to ensure DOM ready
                 setTimeout(startSpotlightAutoScroll, 100);
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
@@ -494,7 +500,6 @@
         function renderView() { 
             if (currentView === 'categories') {
                 renderCategoriesView();
-                // restart spotlight auto-scroll after re-render
                 setTimeout(startSpotlightAutoScroll, 50);
             } else {
                 renderCatalogView();
@@ -608,7 +613,15 @@
                 </div>`;
             
             if (filteredBooks.length === 0) { 
-                html += `<div class="loader">${isAmharic ? 'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</div>`; 
+                // No results: show "Request book" option
+                html += `
+                    <div class="loader">
+                        <i class="fa-solid fa-book-open"></i>
+                        <p>${isAmharic ? 'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</p>
+                        <a href="${GOOGLE_FORM_URL}" target="_blank" class="btn-order" style="max-width: 250px; margin-top: 1rem;">
+                            <i class="fa-solid fa-paper-plane"></i> ${isAmharic ? 'መጽሐፍ ጠይቅ' : 'Request this Book'}
+                        </a>
+                    </div>`;
                 container.innerHTML = html; 
                 return; 
             }
