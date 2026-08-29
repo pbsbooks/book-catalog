@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pinnah Book Store | Premium Digital Archive</title>
+    <!-- Preload hero and slider images for faster loading -->
     <link rel="preload" as="image" href="Home-page.png" fetchpriority="high">
+    <link rel="preload" as="image" href="hero2.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="hero3.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="hero4.jpg" fetchpriority="high">
+    <link rel="preload" as="image" href="hero5.jpg" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Cursive font for title -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -53,18 +57,18 @@
         .hero-slide.active { opacity:1; }
         .hero-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(to top, rgba(11,49,84,0.9) 0%, rgba(11,49,84,0.4) 50%, rgba(11,49,84,0.2) 100%); z-index:1; }
         .hero-content { position:relative; z-index:2; width:100%; max-width:1400px; margin:0 auto; color:#fff; display:flex; flex-direction:column; align-items:flex-start; }
-        .hero-logo-row { display:flex; align-items:center; gap:1rem; margin-bottom:2rem; }
-        .hero-logo { width:80px; height:auto; object-fit:contain; filter:drop-shadow(0 8px 15px rgba(0,0,0,0.5)); transition:transform 0.3s ease; }
-        .hero-logo:hover { transform:scale(1.1); }
+        .hero-logo-row { display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; }
+        .hero-logo { width:120px; height:auto; object-fit:contain; filter:drop-shadow(0 8px 15px rgba(0,0,0,0.5)); transition:transform 0.3s ease; }
+        .hero-logo:hover { transform:scale(1.05); }
         .hero-title {
             font-family: 'Great Vibes', cursive;
-            font-size: 3.5rem;
+            font-size: 4.2rem;
             font-weight: 400;
             letter-spacing: -0.5px;
             line-height: 1.1;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px rgba(212,175,55,0.7);
+            text-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px rgba(0,0,0,0.4);
             margin: 0;
-            color: #f5d76e;  /* rich gold */
+            color: #c9b896;   /* warm manuscript brownish grey */
         }
         .hero-tagline { font-size:1.1rem; color:#e2e8f0; max-width:600px; margin-bottom:2rem; text-shadow:0 2px 8px rgba(0,0,0,0.5); }
         .search-container { width:100%; max-width:600px; position:relative; }
@@ -241,8 +245,8 @@
         #backToTop:hover { background:var(--accent); color:var(--primary); }
         @media (max-width:768px) {
             .hero { padding: 1.5rem 5% 3rem; }
-            .hero-logo { width: 60px; }
-            .hero-title { font-size: 2.5rem; }
+            .hero-logo { width: 80px; }
+            .hero-title { font-size: 3rem; }
             .hero-tagline { font-size: 1rem; }
             .flip-card { height: 380px; }
             .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
@@ -340,12 +344,12 @@
             }, 5000);
         }
 
-        // ====== AUTO‑SCROLL FOR SPOTLIGHTS (Simplified) ======
+        // ====== AUTO‑SCROLL FOR SPOTLIGHTS (simple & robust) ======
         let spotlightAutoScrollInterval = null;
         let spotlightPaused = false;
 
         function startSpotlightAutoScroll() {
-            // Clear any existing interval to avoid duplicates
+            // Clear any existing interval
             if (spotlightAutoScrollInterval) {
                 clearInterval(spotlightAutoScrollInterval);
                 spotlightAutoScrollInterval = null;
@@ -362,12 +366,12 @@
 
             spotlightAutoScrollInterval = setInterval(() => {
                 if (!spotlightPaused) {
-                    container.scrollLeft += 2; // 2px per tick, adjust speed here
+                    container.scrollLeft += 2; // speed
                     if (container.scrollLeft >= container.scrollWidth / 2) {
-                        container.scrollLeft = 0; // loop back
+                        container.scrollLeft = 0;
                     }
                 }
-            }, 20); // 20ms -> ~50fps, smooth enough
+            }, 20); // ~50fps
         }
 
         function sanitizeNumber(value) {
@@ -560,7 +564,6 @@
                     allBooks.find(book => String(book.id) === String(fid))
                 ).filter(Boolean);
 
-                // Fallback if none matched
                 if (featuredBooks.length === 0) {
                     featuredBooks = allBooks.slice(0, 20);
                 }
@@ -573,8 +576,8 @@
 
                 renderView();
                 startHeroSlider();
-                // Start auto-scroll after categories are rendered
-                startSpotlightAutoScroll();
+                // Start auto-scroll after a short delay to ensure DOM is ready
+                setTimeout(startSpotlightAutoScroll, 500);
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
             }
@@ -583,7 +586,8 @@
         function renderView() { 
             if (currentView === 'categories') {
                 renderCategoriesView();
-                startSpotlightAutoScroll(); // restart after re-render
+                // restart auto-scroll each time categories view is shown
+                setTimeout(startSpotlightAutoScroll, 100);
             } else {
                 renderCatalogView();
             }
