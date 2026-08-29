@@ -49,7 +49,7 @@
         .btn-outline:hover { background:var(--primary); color:#fff; }
         .btn-outline i { font-size:1.1rem; }
 
-        /* ========== HERO SLIDER ========== */
+        /* ========== HERO ========== */
         .hero { min-height:100vh; display:flex; align-items:flex-end; padding:2rem 5% 4rem; position:relative; overflow:hidden; }
         .hero-slider { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
         .hero-slide { position:absolute; top:0; left:0; width:100%; height:100%; background-size:cover; background-position:center; opacity:0; transition:opacity 1.2s ease-in-out; }
@@ -106,14 +106,24 @@
             padding-bottom: 1rem;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
+            position: relative;
         }
         .horizontal-scroll .flip-card {
             flex: 0 0 220px;
             min-width: 220px;
             max-width: 220px;
             scroll-snap-align: start;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .book-grid .flip-card { width: 100%; }
+        .horizontal-scroll .flip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        .book-grid .flip-card { width: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .book-grid .flip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
         .flip-card { background-color: transparent; perspective: 1000px; cursor: pointer; height: 420px; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
@@ -165,6 +175,23 @@
         #backToTop { position:fixed; bottom:2rem; right:2rem; background:var(--primary); color:#fff; border:none; width:50px; height:50px; border-radius:50%; cursor:pointer; font-size:1.2rem; box-shadow:var(--shadow-lg); display:none; align-items:center; justify-content:center; z-index:999; transition:var(--transition); }
         #backToTop.show { display:flex; }
         #backToTop:hover { background:var(--accent); color:var(--primary); }
+        /* Spotlight arrows */
+        .spotlight-arrows { display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem; }
+        .spotlight-arrow {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .spotlight-arrow:hover { background: var(--primary); color: #fff; }
         @media (max-width:768px) {
             .hero { padding: 1.5rem 5% 3rem; }
             .hero-logo { width: 80px; }
@@ -181,7 +208,10 @@
         <div class="nav-actions">
             <button class="btn-outline" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
             <button class="btn-outline" id="langToggle" onclick="toggleLang()">🌐 አማርኛ</button>
-            <a href="https://t.me/pinnah_book_store_1" target="_blank" class="btn-outline" style="background:var(--primary); color:#fff;">Join Channel</a>
+            <!-- Telegram icon only -->
+            <a href="https://t.me/pinnah_book_store_1" target="_blank" class="btn-outline" style="background:var(--primary); color:#fff;" aria-label="Join Channel">
+                <i class="fa-brands fa-telegram"></i>
+            </a>
         </div>
     </nav>
 
@@ -286,6 +316,14 @@
                 spotlightRAF = requestAnimationFrame(step);
             };
             spotlightRAF = requestAnimationFrame(step);
+        }
+
+        // ====== SPOTLIGHT ARROWS ======
+        function scrollSpotlight(direction) {
+            const container = document.getElementById('spotlightScroll');
+            if (!container) return;
+            const amount = 250; // scroll amount
+            container.scrollBy({ left: direction * amount, behavior: 'smooth' });
         }
 
         // ====== UTILITY ======
@@ -516,8 +554,12 @@
                     <div class="section-header">
                         <h2>${isAmharic ? 'የተመረጡ መጻሕፍት' : 'Handpicked Spotlights'}</h2>
                     </div>
-                    <div class="horizontal-scroll" id="spotlightScroll">
-                        ${doubledBooks.map(book => flipCardHTML(book)).join('')}
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="spotlight-arrow" onclick="scrollSpotlight(-1)" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+                        <div class="horizontal-scroll" id="spotlightScroll" style="flex:1;">
+                            ${doubledBooks.map(book => flipCardHTML(book)).join('')}
+                        </div>
+                        <button class="spotlight-arrow" onclick="scrollSpotlight(1)" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
                     </div>`;
             }
 
@@ -613,7 +655,6 @@
                 </div>`;
             
             if (filteredBooks.length === 0) { 
-                // No results: show "Request book" option
                 html += `
                     <div class="loader">
                         <i class="fa-solid fa-book-open"></i>
