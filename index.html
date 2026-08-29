@@ -7,7 +7,8 @@
     <link rel="preload" as="image" href="Home-page.png" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
+    <!-- Cursive font for title -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -56,13 +57,14 @@
         .hero-logo { width:80px; height:auto; object-fit:contain; filter:drop-shadow(0 8px 15px rgba(0,0,0,0.5)); transition:transform 0.3s ease; }
         .hero-logo:hover { transform:scale(1.1); }
         .hero-title {
-            font-size: 2.5rem;
-            font-weight: 900;
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            font-weight: 400;
             letter-spacing: -0.5px;
             line-height: 1.1;
             text-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px rgba(212,175,55,0.7);
             margin: 0;
-            color: #d4af37;   /* Gold */
+            color: #f5d76e;  /* rich gold */
         }
         .hero-tagline { font-size:1.1rem; color:#e2e8f0; max-width:600px; margin-bottom:2rem; text-shadow:0 2px 8px rgba(0,0,0,0.5); }
         .search-container { width:100%; max-width:600px; position:relative; }
@@ -240,7 +242,7 @@
         @media (max-width:768px) {
             .hero { padding: 1.5rem 5% 3rem; }
             .hero-logo { width: 60px; }
-            .hero-title { font-size: 2rem; }
+            .hero-title { font-size: 2.5rem; }
             .hero-tagline { font-size: 1rem; }
             .flip-card { height: 380px; }
             .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
@@ -338,45 +340,34 @@
             }, 5000);
         }
 
-        // ====== AUTO-SCROLL FOR SPOTLIGHTS ======
-        let spotlightAutoScrollId = null;
+        // ====== AUTO‑SCROLL FOR SPOTLIGHTS (Simplified) ======
+        let spotlightAutoScrollInterval = null;
         let spotlightPaused = false;
 
         function startSpotlightAutoScroll() {
+            // Clear any existing interval to avoid duplicates
+            if (spotlightAutoScrollInterval) {
+                clearInterval(spotlightAutoScrollInterval);
+                spotlightAutoScrollInterval = null;
+            }
+
             const container = document.getElementById('spotlightScroll');
             if (!container) return;
 
-            // Remove any existing event listeners and interval
-            if (spotlightAutoScrollId) {
-                cancelAnimationFrame(spotlightAutoScrollId);
-                spotlightAutoScrollId = null;
-            }
+            // Pause on hover/touch
+            container.addEventListener('mouseenter', () => spotlightPaused = true);
+            container.addEventListener('mouseleave', () => spotlightPaused = false);
+            container.addEventListener('touchstart', () => spotlightPaused = true);
+            container.addEventListener('touchend', () => spotlightPaused = false);
 
-            container.removeEventListener('mouseenter', onSpotlightEnter);
-            container.removeEventListener('mouseleave', onSpotlightLeave);
-            container.removeEventListener('touchstart', onSpotlightTouchStart);
-            container.removeEventListener('touchend', onSpotlightTouchEnd);
-
-            container.addEventListener('mouseenter', onSpotlightEnter);
-            container.addEventListener('mouseleave', onSpotlightLeave);
-            container.addEventListener('touchstart', onSpotlightTouchStart);
-            container.addEventListener('touchend', onSpotlightTouchEnd);
-
-            function onSpotlightEnter() { spotlightPaused = true; }
-            function onSpotlightLeave() { spotlightPaused = false; }
-            function onSpotlightTouchStart() { spotlightPaused = true; }
-            function onSpotlightTouchEnd() { spotlightPaused = false; }
-
-            const step = () => {
+            spotlightAutoScrollInterval = setInterval(() => {
                 if (!spotlightPaused) {
-                    container.scrollLeft += 3;
+                    container.scrollLeft += 2; // 2px per tick, adjust speed here
                     if (container.scrollLeft >= container.scrollWidth / 2) {
-                        container.scrollLeft = 0;
+                        container.scrollLeft = 0; // loop back
                     }
                 }
-                spotlightAutoScrollId = requestAnimationFrame(step);
-            };
-            spotlightAutoScrollId = requestAnimationFrame(step);
+            }, 20); // 20ms -> ~50fps, smooth enough
         }
 
         function sanitizeNumber(value) {
@@ -582,10 +573,8 @@
 
                 renderView();
                 startHeroSlider();
-                // Start auto-scroll after initial render
-                if (currentView === 'categories') {
-                    startSpotlightAutoScroll();
-                }
+                // Start auto-scroll after categories are rendered
+                startSpotlightAutoScroll();
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
             }
@@ -594,8 +583,7 @@
         function renderView() { 
             if (currentView === 'categories') {
                 renderCategoriesView();
-                // Ensure auto-scroll starts after categories are rendered
-                startSpotlightAutoScroll();
+                startSpotlightAutoScroll(); // restart after re-render
             } else {
                 renderCatalogView();
             }
