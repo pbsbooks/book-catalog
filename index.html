@@ -256,7 +256,7 @@
                 <img src="logo.png" alt="Pinnah Book Store Logo" class="hero-logo" onerror="this.style.display='none'">
                 <h1 class="hero-title" data-en="Pinnah Book Store" data-am="ፒናህ የመጻሕፍት መደብር">Pinnah Book Store</h1>
             </div>
-            <p class="hero-tagline" data-en="The Ultimate Digital Archive" data-am="የመጨረሻው ዲጂታል ማህደር">The Ultimate Digital Archive</p>
+            <p class="hero-tagline" data-en="The Ultimate Digital Archive" data-am="የፈለጉት ሁሉ የሚገኝበት ዲጂታል ማህደር">The Ultimate Digital Archive</p>
             <div class="search-container">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input type="text" id="searchInput" class="search-input" placeholder="Search any book title or author..." oninput="handleSearchInput()">
@@ -592,12 +592,12 @@
                     <div class="mvg-card">
                         <div class="mvg-icon"><i class="fa-solid fa-bullseye"></i></div>
                         <h3>${isAmharic ? 'ተልዕኮ' : 'Mission'}</h3>
-                        <p>${isAmharic ? 'ለተማሪዎች፣ ለሙያተኞች እና ለአንባቢያን ተደራሽ የሆኑ ከፍተኛ ጥራት ያላቸውን ዲጂታል መጻሕፍትን በፍትሃዊ ዋጋ ማቅረብ።' : 'To provide accessible, high-quality digital books at fair prices for students, professionals, and readers worldwide.'}</p>
+                        <p>${isAmharic ? 'ለተማሪዎች፣ ለሙያተኞች እና ለአንባቢያን ተደራሽ የሆኑ ከፍተኛ ጥራት ያላቸውን ዲጂታል መጻሕፍትን በአነስተኛ ዋጋ ማቅረብ።' : 'To provide accessible, high-quality digital books at fair prices for students, professionals, and readers worldwide.'}</p>
                     </div>
                     <div class="mvg-card">
                         <div class="mvg-icon"><i class="fa-solid fa-eye"></i></div>
                         <h3>${isAmharic ? 'ራዕይ' : 'Vision'}</h3>
-                        <p>${isAmharic ? 'በአፍሪካ ቀዳሚ የዲጂታል መጻሕፍት መደብር ለመሆን እና የእውቀት ክፍተትን ለማገናኘት።' : 'To become Africa’s leading digital bookstore, bridging the knowledge gap with curated literature.'}</p>
+                        <p>${isAmharic ? 'በአፍሪካ ቀዳሚ የዲጂታል መጻሕፍት መደብር ለመሆን እና የእውቀት ክፍተትን ለመሙላትት።' : 'To become Africa’s leading digital bookstore, bridging the knowledge gap with curated literature.'}</p>
                     </div>
                     <div class="mvg-card">
                         <div class="mvg-icon"><i class="fa-solid fa-flag"></i></div>
@@ -658,12 +658,12 @@
                         <label for="sortSelect">${isAmharic ? 'ደርድር' : 'Sort'}:</label>
                         <select id="sortSelect" class="sort-select" onchange="changeSortOrder(this.value)">
                             <option value="default" ${sortOrder === 'default' ? 'selected' : ''}>${isAmharic ? 'ነባሪ' : 'Default'}</option>
-                            <option value="title_asc" ${sortOrder === 'title_asc' ? 'selected' : ''}>${isAmharic ? 'ርዕስ አ–ፐ' : 'Title A–Z'}</option>
-                            <option value="title_desc" ${sortOrder === 'title_desc' ? 'selected' : ''}>${isAmharic ? 'ርዕስ ፐ–አ' : 'Title Z–A'}</option>
-                            <option value="author_asc" ${sortOrder === 'author_asc' ? 'selected' : ''}>${isAmharic ? 'ደራሲ አ–ፐ' : 'Author A–Z'}</option>
-                            <option value="author_desc" ${sortOrder === 'author_desc' ? 'selected' : ''}>${isAmharic ? 'ደራሲ ፐ–አ' : 'Author Z–A'}</option>
-                            <option value="year_asc" ${sortOrder === 'year_asc' ? 'selected' : ''}>${isAmharic ? 'ዓመት አሮጌ–አዲስ' : 'Year Old–New'}</option>
-                            <option value="year_desc" ${sortOrder === 'year_desc' ? 'selected' : ''}>${isAmharic ? 'ዓመት አዲስ–አሮጌ' : 'Year New–Old'}</option>
+                            <option value="title_asc" ${sortOrder === 'title_asc' ? 'selected' : ''}>${isAmharic ? 'ርዕስ ሀ–ፐ' : 'Title A–Z'}</option>
+                            <option value="title_desc" ${sortOrder === 'title_desc' ? 'selected' : ''}>${isAmharic ? 'ርዕስ ፐ–ሀ' : 'Title Z–A'}</option>
+                            <option value="author_asc" ${sortOrder === 'author_asc' ? 'selected' : ''}>${isAmharic ? 'ደራሲ ሀ–ፐ' : 'Author A–Z'}</option>
+                            <option value="author_desc" ${sortOrder === 'author_desc' ? 'selected' : ''}>${isAmharic ? 'ደራሲ ፐ–ሀ' : 'Author Z–A'}</option>
+                            <option value="year_asc" ${sortOrder === 'year_asc' ? 'selected' : ''}>${isAmharic ? 'ዓመት የድሮ–አዲስ' : 'Year Old–New'}</option>
+                            <option value="year_desc" ${sortOrder === 'year_desc' ? 'selected' : ''}>${isAmharic ? 'ዓመት አዲስ–የድሮ' : 'Year New–Old'}</option>
                             <option value="price_asc" ${sortOrder === 'price_asc' ? 'selected' : ''}>${isAmharic ? 'ዋጋ ዝቅ–ከፍ' : 'Price Low–High'}</option>
                             <option value="price_desc" ${sortOrder === 'price_desc' ? 'selected' : ''}>${isAmharic ? 'ዋጋ ከፍ–ዝቅ' : 'Price High–Low'}</option>
                         </select>
@@ -679,7 +679,7 @@
                 html += `
                     <div class="loader">
                         <i class="fa-solid fa-book-open"></i>
-                        <p>${isAmharic ? 'ለፍለጋዎ የሚስማማ መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</p>
+                        <p>${isAmharic ? 'የፈለጉት መጽሐፍ አልተገኘም።' : 'No books found matching your search.'}</p>
                         <a href="${GOOGLE_FORM_URL}" target="_blank" class="btn-order" style="max-width: 250px; margin-top: 1rem;">
                             <i class="fa-solid fa-paper-plane"></i> ${isAmharic ? 'መጽሐፍ ጠይቅ' : 'Request this Book'}
                         </a>
