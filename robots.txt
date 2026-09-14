@@ -1,4 +1,1 @@
-User-agent: *
-Allow: /
-
 Sitemap: https://pinnahbooks.pages.dev/sitemap.xml
