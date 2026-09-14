@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap><loc>https://pinnahbooks.pages.dev/sitemap1.xml</loc></sitemap>
-  <sitemap><loc>https://pinnahbooks.pages.dev/sitemap2.xml</loc></sitemap>
-  <sitemap><loc>https://pinnahbooks.pages.dev/sitemap3.xml</loc></sitemap>
-  <sitemap><loc>https://pinnahbooks.pages.dev/sitemap4.xml</loc></sitemap>
-  <sitemap><loc>https://pinnahbooks.pages.dev/sitemap5.xml</loc></sitemap>
-</sitemapindex>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://pinnahbooks.pages.dev/</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
