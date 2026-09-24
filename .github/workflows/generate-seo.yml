@@ -1,35 +1,24 @@
-name: Generate SEO Files
+import json
 
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'catalog.json'
-      - 'generate_sitemap.py'
+DOMAIN = "https://pinnahbooks.pages.dev"
 
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+with open('catalog.json', 'r', encoding='utf-8') as f:
+    books = json.load(f)
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+xml += f'  <url><loc>{DOMAIN}/</loc><priority>1.0</priority></url>\n'
 
-      - name: Run sitemap generator
-        run: python generate_sitemap.py
+count = 0
+for b in books:
+    book_id = b.get('Book ID') or b.get('id')
+    if book_id:
+        xml += f'  <url><loc>{DOMAIN}/?book={book_id}</loc><priority>0.8</priority></url>\n'
+        count += 1
 
-      - name: Commit sitemap
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sitemap.xml
-          git commit -m "Update sitemap with all books" || echo "No changes"
-          git push
+xml += '</urlset>'
+
+with open('sitemap.xml', 'w', encoding='utf-8') as f:
+    f.write(xml)
+
+print(f"sitemap.xml generated with {count} book URLs.")
