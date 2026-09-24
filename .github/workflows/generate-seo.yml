@@ -1,24 +1,35 @@
-import json
+name: Generate SEO Files
 
-DOMAIN = "https://pinnahbooks.pages.dev"
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'catalog.json'
+      - 'generate_sitemap.py'
 
-with open('catalog.json', 'r', encoding='utf-8') as f:
-    books = json.load(f)
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-xml += f'  <url><loc>{DOMAIN}/</loc><priority>1.0</priority></url>\n'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-count = 0
-for b in books:
-    book_id = b.get('Book ID') or b.get('id')
-    if book_id:
-        xml += f'  <url><loc>{DOMAIN}/?book={book_id}</loc><priority>0.8</priority></url>\n'
-        count += 1
+      - name: Run sitemap generator
+        run: python generate_sitemap.py
 
-xml += '</urlset>'
-
-with open('sitemap.xml', 'w', encoding='utf-8') as f:
-    f.write(xml)
-
-print(f"sitemap.xml generated with {count} book URLs.")
+      - name: Commit sitemap
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          git commit -m "Regenerate full sitemap" || echo "No changes"
+          git push
