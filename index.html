@@ -5,23 +5,44 @@
     <meta name="google-site-verification" content="OuBRYIzyvzoYQ6gm3Ai1r4FFF5fnz8srIHpBXop42vhM" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Primary SEO Keywords (Bilingual & Category-Rich) -->
+    <!-- Primary SEO -->
     <title>Pinnah Books | Digital Bookstore in Ethiopia | ፒናህ ቡክ ስቶር</title>
     <meta name="description" content="Pinnah Books is Ethiopia's digital bookstore with 10,000+ titles across 35 categories: Medicine, Engineering, Law, IT, Business, Science, History & Literature. የሕክምና፣ ኢንጂነሪንግ፣ ሕግ፣ ቢዝነስ፣ ኮምፒውተርና የታሪክ መጻሕፍት በቀላሉ ይግዙ።">
     <meta name="keywords" content="Pinnah books, books in Ethiopia, ፒናህ ቡክ ስቶር, መጻሕፍት, የሕክምና መጻሕፍት, የሕግ መጻሕፍት, የኢንጂነሪንግ መጻሕፍት, የቢዝነስ መጻሕፍት, የኮምፒውተር መጻሕፍት, የታሪክ መጻሕፍት, የሥነ ጽሑፍ መጻሕፍት, medical textbooks Ethiopia, engineering books Ethiopia, law books Ethiopia, business economics books, IT computer science books, natural science books, Ethiopian history, literature, Telegram books">
 
-    <!-- Favicon & Search Engine Logo Tags -->
-    <link rel="icon" type="image/png" sizes="192x192" href="https://pinnahbooks.pages.dev/logo.png">
-    <link rel="shortcut icon" href="https://pinnahbooks.pages.dev/logo.png">
-    <link rel="apple-touch-icon" href="https://pinnahbooks.pages.dev/logo.png">
+    <!-- Site Name Signals (tells Google your brand name) -->
+    <meta name="application-name" content="Pinnah Book Store">
+    <meta property="og:site_name" content="Pinnah Book Store">
 
-    <!-- Social Sharing Tags -->
+    <!-- Favicon (uses the cropped icon image) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="https://pinnahbooks.pages.dev/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://pinnahbooks.pages.dev/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://pinnahbooks.pages.dev/favicon.png">
+    <link rel="shortcut icon" href="https://pinnahbooks.pages.dev/favicon.png">
+
+    <!-- Social Sharing -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Pinnah Books | Digital Bookstore in Ethiopia | ፒናህ ቡክ ስቶር">
     <meta property="og:description" content="Search 10,000+ academic & professional books in Ethiopia (Medicine, Law, Engineering, IT, Business, History). Fast Telegram delivery.">
     <meta property="og:image" content="https://pinnahbooks.pages.dev/logo.png">
+    <meta property="og:url" content="https://pinnahbooks.pages.dev/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pinnah Books | Digital Bookstore in Ethiopia">
+    <meta name="twitter:description" content="10,000+ e-books across 35 categories. Fast Telegram delivery.">
+    <meta name="twitter:image" content="https://pinnahbooks.pages.dev/logo.png">
 
-    <!-- Google JSON-LD Schema -->
+    <!-- JSON-LD Schema: WebSite (Google uses this for site name in search) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Pinnah Book Store",
+      "alternateName": "ፒናህ ቡክ ስቶር",
+      "url": "https://pinnahbooks.pages.dev/"
+    }
+    </script>
+
+    <!-- JSON-LD Schema: BookStore -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -30,6 +51,7 @@
       "alternateName": "ፒናህ ቡክ ስቶር",
       "url": "https://pinnahbooks.pages.dev",
       "logo": "https://pinnahbooks.pages.dev/logo.png",
+      "image": "https://pinnahbooks.pages.dev/logo.png",
       "description": "Digital bookstore archive and ordering platform offering over 10,000 e-books across 35 categories for Ethiopian readers.",
       "genre": [
         "Medicine & Health Sciences / ሕክምና",
@@ -86,9 +108,8 @@
         body { background:var(--bg-color); color:var(--text-main); -webkit-font-smoothing:antialiased; transition:var(--transition); }
         h1,h2,h3 { font-family:'Playfair Display',serif; color:var(--primary); }
 
-        /* ========== NAV (more transparent, glassy) ========== */
         nav {
-            background: rgba(255, 255, 255, 0.35);   /* increased transparency */
+            background: rgba(255, 255, 255, 0.35);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             position: sticky;
@@ -103,7 +124,7 @@
             transition: background 0.3s ease;
         }
         body.dark-mode nav {
-            background: rgba(15, 23, 42, 0.35);   /* increased dark transparency */
+            background: rgba(15, 23, 42, 0.35);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 30px rgba(0,0,0,0.2);
         }
@@ -123,7 +144,6 @@
         .btn-outline:hover { background:var(--primary); color:#fff; }
         .btn-outline i { font-size:1.1rem; }
 
-        /* ========== HERO ========== */
         .hero { min-height:100vh; display:flex; align-items:flex-end; padding:2rem 5% 4rem; position:relative; overflow:hidden; }
         .hero-slider { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
         .hero-slide { position:absolute; top:0; left:0; width:100%; height:100%; background-size:cover; background-position:center; opacity:0; transition:opacity 1.2s ease-in-out; }
@@ -157,7 +177,6 @@
         .scroll-indicator { margin-top:2rem; font-size:0.9rem; color:#fff; cursor:pointer; animation:bounce 2s infinite; display:flex; align-items:center; gap:0.5rem; }
         @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0);} 40%{transform:translateY(-10px);} 60%{transform:translateY(-5px);} }
 
-        /* ========== MAIN ========== */
         .container { padding:3rem 5%; max-width:1400px; margin:0 auto; }
         .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; padding-bottom:1rem; border-bottom:2px solid var(--border); flex-wrap:wrap; gap:1rem; }
         .section-header h2 { font-size:2.5rem; }
@@ -171,7 +190,6 @@
         .category-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-lg); border-color:var(--accent); }
         .category-icon { font-size:2.5rem; color:var(--primary); background:#f1f5f9; width:70px; height:70px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
 
-        /* ========== BOOK CARDS ========== */
         .book-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:2rem; }
         .horizontal-scroll {
             display: flex;
@@ -329,7 +347,6 @@
         const BOOKS_PER_PAGE = 24;
         const GOOGLE_FORM_URL = "https://forms.gle/GbMsbSxUSeyUtNfu9";
 
-        // ====== FEATURED BOOKS ======
         const FEATURED_IDS = [
             "BK-04937","BK-01780","BK-00294","BK-10038","BK-01917","BK-00015","BK-10207","BK-00863","BK-00057","BK-06962",
             "BK-03065","BK-06612","BK-05198","BK-03187","BK-01247","BK-08943","BK-07188","BK-02436","BK-05465","BK-07982"
@@ -339,7 +356,6 @@
         let currentView = 'categories', selectedCategory = '', currentPage = 1, isAmharic = false, searchTimeout;
         let sortOrder = 'default';
 
-        // ====== HERO SLIDER ======
         let heroSlideIndex = 0;
         const heroSlides = document.querySelectorAll('.hero-slide');
         function startHeroSlider() {
@@ -350,7 +366,6 @@
             }, 5000);
         }
 
-        // ====== SPOTLIGHT AUTO‑SCROLL (pauses on user interaction) ======
         let spotlightRAF = null;
         let spotlightPaused = false;
         let userInteracted = false;
@@ -620,7 +635,7 @@
                 renderView();
                 startHeroSlider();
                 setTimeout(startSpotlightAutoScroll, 100);
-                checkURLParams(); // Check for ?book= parameter
+                checkURLParams();
             } catch (error) {
                 document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
             }
