@@ -14,12 +14,11 @@
     <meta name="application-name" content="Pinnah Book Store">
     <meta property="og:site_name" content="Pinnah Book Store">
 
-    <!-- Favicon (uses the cropped icon image) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png">
     <link rel="shortcut icon" type="image/png" href="/favicon.png">
-
 
     <!-- Social Sharing -->
     <meta property="og:type" content="website">
@@ -32,7 +31,7 @@
     <meta name="twitter:description" content="10,000+ e-books across 35 categories. Fast Telegram delivery.">
     <meta name="twitter:image" content="https://pinnahbooks.pages.dev/logo.png">
 
-    <!-- JSON-LD Schema: WebSite (Google uses this for site name in search) -->
+    <!-- JSON-LD Schema: WebSite -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -284,48 +283,126 @@
         }
         .spotlight-arrow:hover { background: var(--primary); color: #fff; }
 
-        /* ========== FLOATING CONTACT BUTTONS ========== */
-        .contact-float {
+        /* ========== CUSTOMER SUPPORT WIDGET ========== */
+        .support-widget {
             position: fixed;
             bottom: 2rem;
             left: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
             z-index: 998;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        .contact-float a {
+        .support-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 24px rgba(11,49,84,0.35);
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.75rem 1.1rem;
-            border-radius: 50px;
-            color: #fff;
-            font-size: 0.9rem;
-            font-weight: 600;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .support-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            background: #22c55e;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            animation: supportPulse 2s infinite;
+        }
+        @keyframes supportPulse {
+            0%,100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.85; }
+        }
+        .support-toggle:hover {
+            transform: scale(1.08);
+            box-shadow: 0 10px 30px rgba(11,49,84,0.5);
+            background: var(--accent);
+            color: var(--primary);
+        }
+        .support-menu {
+            position: absolute;
+            bottom: 78px;
+            left: 0;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            padding: 0.75rem;
+            min-width: 270px;
+            display: none;
+            flex-direction: column;
+            gap: 0.4rem;
+            border: 1px solid var(--border);
+        }
+        .support-menu.open {
+            display: flex;
+            animation: supportSlide 0.25s ease;
+        }
+        @keyframes supportSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .support-menu .support-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--text-muted);
+            padding: 0.5rem 0.75rem 0.35rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.25rem;
+        }
+        .support-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.7rem 0.9rem;
+            border-radius: 10px;
             text-decoration: none;
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-            white-space: nowrap;
+            color: var(--text-main);
+            transition: all 0.2s ease;
         }
-        .contact-float a i {
-            font-size: 1.1rem;
+        .support-menu a:hover {
+            background: var(--bg-color);
+            transform: translateX(3px);
         }
-        .contact-float a:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+        .support-menu .support-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.05rem;
+            flex-shrink: 0;
         }
-        .contact-float .btn-phone {
-            background: #16a34a;
+        .support-menu .support-icon.green { background: #16a34a; }
+        .support-menu .support-icon.blue { background: #229ED9; }
+        .support-menu .support-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+            text-align: left;
         }
-        .contact-float .btn-phone:hover {
-            background: #15803d;
+        .support-menu .support-label {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-main);
         }
-        .contact-float .btn-tg-dm {
-            background: #229ED9;
-        }
-        .contact-float .btn-tg-dm:hover {
-            background: #1c80b0;
+        .support-menu .support-sub {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
         }
 
         @media (max-width:768px) {
@@ -335,8 +412,9 @@
             .hero-tagline { font-size: 1rem; }
             .flip-card { height: 380px; }
             .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
-            .contact-float { bottom: 1.2rem; left: 1.2rem; gap: 0.5rem; }
-            .contact-float a { padding: 0.65rem 0.9rem; font-size: 0.85rem; }
+            .support-widget { bottom: 1.2rem; left: 1.2rem; }
+            .support-toggle { width: 54px; height: 54px; font-size: 1.3rem; }
+            .support-menu { min-width: 240px; bottom: 70px; }
         }
     </style>
 </head>
@@ -385,14 +463,28 @@
 
     <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
 
-    <!-- Floating Contact Buttons -->
-    <div class="contact-float">
-        <a href="tel:+251991693616" class="btn-phone" aria-label="Call Support" title="Call Support">
-            <i class="fa-solid fa-phone"></i> Call Support
-        </a>
-        <a href="https://t.me/PBSA001" target="_blank" class="btn-tg-dm" aria-label="Chat on Telegram" title="Chat on Telegram">
-            <i class="fa-brands fa-telegram"></i> Chat on Telegram
-        </a>
+    <!-- Customer Support Widget -->
+    <div class="support-widget">
+        <div class="support-menu" id="supportMenu">
+            <div class="support-title">Customer Support</div>
+            <a href="tel:+251991693616">
+                <div class="support-icon green"><i class="fa-solid fa-phone"></i></div>
+                <div class="support-info">
+                    <span class="support-label">Call Support</span>
+                    <span class="support-sub">+251 991 693 616</span>
+                </div>
+            </a>
+            <a href="https://t.me/PBSA001" target="_blank">
+                <div class="support-icon blue"><i class="fa-brands fa-telegram"></i></div>
+                <div class="support-info">
+                    <span class="support-label">Telegram Chat</span>
+                    <span class="support-sub">@PBSA001</span>
+                </div>
+            </a>
+        </div>
+        <button class="support-toggle" id="supportToggle" aria-label="Customer Support" onclick="toggleSupportMenu()">
+            <i class="fa-solid fa-headset"></i>
+        </button>
     </div>
 
     <div id="lightbox" class="lightbox" onclick="this.style.display='none'">
@@ -467,6 +559,19 @@
             if (!container) return;
             container.scrollBy({ left: direction * 250, behavior: 'smooth' });
         }
+
+        /* ========== SUPPORT MENU TOGGLE ========== */
+        function toggleSupportMenu() {
+            const menu = document.getElementById('supportMenu');
+            if (menu) menu.classList.toggle('open');
+        }
+        document.addEventListener('click', (e) => {
+            const widget = document.querySelector('.support-widget');
+            if (widget && !widget.contains(e.target)) {
+                const menu = document.getElementById('supportMenu');
+                if (menu) menu.classList.remove('open');
+            }
+        });
 
         function sanitizeNumber(value) {
             if (value === null || value === undefined || value === '') return 'N/A';
