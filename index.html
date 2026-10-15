@@ -61,7 +61,7 @@
         "Business, Economics & Finance / ቢዝነስና ኢኮኖሚክስ",
         "Natural & Social Sciences / ተፈጥሮና ማህበራዊ ሳይንስ",
         "Ethiopian History & Politics / የታሪክና ፖለቲካ መጻሕፍት",
-        "Literature & Fiction / ሥነ ጽሑፍና ልቦለድ"
+        "Literature & Fiction / ስነ ጽሑፍና ልቦለድ"
       ],
       "areaServed": {
         "@type": "Country",
@@ -264,9 +264,30 @@
         .mvg-card p { color: var(--text-muted); line-height: 1.7; }
         .lightbox { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:2000; align-items:center; justify-content:center; cursor:pointer; }
         .lightbox img { max-width:90%; max-height:90%; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.5); }
-        #backToTop { position:fixed; bottom:2rem; right:2rem; background:var(--primary); color:#fff; border:none; width:50px; height:50px; border-radius:50%; cursor:pointer; font-size:1.2rem; box-shadow:var(--shadow-lg); display:none; align-items:center; justify-content:center; z-index:999; transition:var(--transition); }
+
+        /* Back-to-top (now on the LEFT) */
+        #backToTop {
+            position:fixed;
+            bottom:2rem;
+            left:2rem;
+            background:var(--primary);
+            color:#fff;
+            border:none;
+            width:50px;
+            height:50px;
+            border-radius:50%;
+            cursor:pointer;
+            font-size:1.2rem;
+            box-shadow:var(--shadow-lg);
+            display:none;
+            align-items:center;
+            justify-content:center;
+            z-index:999;
+            transition:var(--transition);
+        }
         #backToTop.show { display:flex; }
         #backToTop:hover { background:var(--accent); color:var(--primary); }
+
         .spotlight-arrow {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -283,124 +304,208 @@
         }
         .spotlight-arrow:hover { background: var(--primary); color: #fff; }
 
-        /* ========== CUSTOMER SUPPORT WIDGET ========== */
+        /* ========== CUSTOMER SUPPORT WIDGET (RIGHT SIDE, GLASSY) ========== */
         .support-widget {
             position: fixed;
             bottom: 2rem;
-            left: 2rem;
+            right: 2rem;
             z-index: 998;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
+
         .support-toggle {
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            background: var(--primary);
+            background: linear-gradient(135deg, rgba(11,49,84,0.92), rgba(15,64,110,0.85));
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             color: #fff;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.25);
             cursor: pointer;
             font-size: 1.5rem;
-            box-shadow: 0 8px 24px rgba(11,49,84,0.35);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
+            box-shadow:
+                0 8px 32px rgba(11,49,84,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                0 0 0 0 rgba(212,175,55,0.5);
+            animation: supportGlow 3s infinite;
         }
+
+        @keyframes supportGlow {
+            0%, 100% {
+                box-shadow:
+                    0 8px 32px rgba(11,49,84,0.4),
+                    inset 0 1px 0 rgba(255,255,255,0.2),
+                    0 0 0 0 rgba(212,175,55,0.5);
+            }
+            50% {
+                box-shadow:
+                    0 8px 32px rgba(11,49,84,0.4),
+                    inset 0 1px 0 rgba(255,255,255,0.2),
+                    0 0 0 12px rgba(212,175,55,0);
+            }
+        }
+
         .support-toggle::after {
             content: '';
             position: absolute;
-            top: 2px;
-            right: 2px;
+            top: 3px;
+            right: 3px;
             width: 14px;
             height: 14px;
             background: #22c55e;
             border-radius: 50%;
-            border: 2px solid #fff;
+            border: 2px solid rgba(255,255,255,0.9);
             animation: supportPulse 2s infinite;
         }
+
         @keyframes supportPulse {
-            0%,100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.15); opacity: 0.85; }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.85; }
         }
+
         .support-toggle:hover {
-            transform: scale(1.08);
-            box-shadow: 0 10px 30px rgba(11,49,84,0.5);
-            background: var(--accent);
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, rgba(212,175,55,0.95), rgba(184,148,32,0.9));
             color: var(--primary);
+            border-color: rgba(255,255,255,0.5);
         }
+
+        .support-toggle.active {
+            transform: rotate(90deg);
+            background: linear-gradient(135deg, rgba(239,68,68,0.9), rgba(220,38,38,0.85));
+        }
+
         .support-menu {
             position: absolute;
-            bottom: 78px;
-            left: 0;
-            background: var(--surface);
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-            padding: 0.75rem;
-            min-width: 270px;
+            bottom: 82px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            border-radius: 20px;
+            box-shadow:
+                0 20px 50px rgba(11,49,84,0.25),
+                inset 0 1px 0 rgba(255,255,255,0.5);
+            padding: 0.85rem;
+            min-width: 285px;
             display: none;
             flex-direction: column;
-            gap: 0.4rem;
-            border: 1px solid var(--border);
+            gap: 0.35rem;
+            overflow: hidden;
         }
+
+        body.dark-mode .support-menu {
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
         .support-menu.open {
             display: flex;
-            animation: supportSlide 0.25s ease;
+            animation: supportSlide 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         @keyframes supportSlide {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(15px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
+
         .support-menu .support-title {
             font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             font-weight: 700;
             color: var(--text-muted);
-            padding: 0.5rem 0.75rem 0.35rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 0.25rem;
+            padding: 0.4rem 0.75rem 0.6rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
+
+        body.dark-mode .support-menu .support-title {
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .support-menu .support-title::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px rgba(34,197,94,0.8);
+        }
+
         .support-menu a {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.7rem 0.9rem;
-            border-radius: 10px;
+            gap: 0.85rem;
+            padding: 0.75rem 0.85rem;
+            border-radius: 14px;
             text-decoration: none;
             color: var(--text-main);
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
         }
+
         .support-menu a:hover {
-            background: var(--bg-color);
-            transform: translateX(3px);
+            background: rgba(255,255,255,0.6);
+            border-color: rgba(212,175,55,0.4);
+            transform: translateX(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
+
+        body.dark-mode .support-menu a:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(212,175,55,0.35);
+        }
+
         .support-menu .support-icon {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 1.05rem;
+            font-size: 1.15rem;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        .support-menu .support-icon.green { background: #16a34a; }
-        .support-menu .support-icon.blue { background: #229ED9; }
+
+        .support-menu .support-icon.green {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .support-menu .support-icon.blue {
+            background: linear-gradient(135deg, #3fc7f7, #229ED9);
+        }
+
         .support-menu .support-info {
             display: flex;
             flex-direction: column;
-            line-height: 1.25;
+            line-height: 1.3;
             text-align: left;
         }
+
         .support-menu .support-label {
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-main);
         }
+
         .support-menu .support-sub {
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             font-weight: 500;
             color: var(--text-muted);
         }
@@ -412,9 +517,10 @@
             .hero-tagline { font-size: 1rem; }
             .flip-card { height: 380px; }
             .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
-            .support-widget { bottom: 1.2rem; left: 1.2rem; }
-            .support-toggle { width: 54px; height: 54px; font-size: 1.3rem; }
-            .support-menu { min-width: 240px; bottom: 70px; }
+            .support-widget { bottom: 1.2rem; right: 1.2rem; }
+            .support-toggle { width: 56px; height: 56px; font-size: 1.3rem; }
+            .support-menu { min-width: 260px; bottom: 72px; }
+            #backToTop { bottom: 1.2rem; left: 1.2rem; width: 46px; height: 46px; }
         }
     </style>
 </head>
@@ -463,7 +569,7 @@
 
     <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fa-solid fa-arrow-up"></i></button>
 
-    <!-- Customer Support Widget -->
+    <!-- Customer Support Widget (RIGHT SIDE) -->
     <div class="support-widget">
         <div class="support-menu" id="supportMenu">
             <div class="support-title">Customer Support</div>
@@ -563,13 +669,17 @@
         /* ========== SUPPORT MENU TOGGLE ========== */
         function toggleSupportMenu() {
             const menu = document.getElementById('supportMenu');
+            const toggle = document.getElementById('supportToggle');
             if (menu) menu.classList.toggle('open');
+            if (toggle) toggle.classList.toggle('active');
         }
         document.addEventListener('click', (e) => {
             const widget = document.querySelector('.support-widget');
             if (widget && !widget.contains(e.target)) {
                 const menu = document.getElementById('supportMenu');
+                const toggle = document.getElementById('supportToggle');
                 if (menu) menu.classList.remove('open');
+                if (toggle) toggle.classList.remove('active');
             }
         });
 
