@@ -54,7 +54,6 @@
         .modal-btn:hover { background: var(--accent); color: var(--primary); }
         .btn-unlock { background: var(--accent); color: var(--primary); border-color: var(--accent); display: flex; gap: 5px; align-items: center; }
 
-        /* How it Works Steps */
         .how-it-works { text-align: left; background: var(--bg-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; border: 1px solid var(--border); }
         .step-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
         .step-item:last-child { margin-bottom: 0; }
@@ -648,11 +647,7 @@
 
         function formatPages(value) { return sanitizeNumber(value); }
         function buildBotLink(book) { return `https://t.me/${BOT_USERNAME}?start=${book.id}`; }
-        
-        // NEW: Build link for Print on Demand
-        function buildPrintLink(book) { 
-            return `https://t.me/${BOT_USERNAME}?start=print_${book.id}`; 
-        }
+        function buildPrintLink(book) { return `https://t.me/${BOT_USERNAME}?start=print_${book.id}`; }
 
         function openLightbox(imageSrc) {
             document.getElementById('lightbox-img').src = imageSrc;
@@ -667,11 +662,16 @@
             const printLink = buildPrintLink(book);
             const priceDisplay = formatPrice(book.price);
             
-            // Calculate 6x price for print
+            // 5000 LIMIT LOGIC FOR PRINT
             let printPriceDisplay = "Contact Us";
-            const numPrice = parseFloat(book.price);
-            if (!isNaN(numPrice)) {
-                printPriceDisplay = (numPrice * 6).toFixed(2) + " ETB";
+            const numPages = parseInt(book.pages);
+            if (!isNaN(numPages) && numPages > 0) {
+                let calcPrice = numPages * 6;
+                if (calcPrice > 5000) {
+                    printPriceDisplay = "Contact Us";
+                } else {
+                    printPriceDisplay = calcPrice.toFixed(2) + " ETB";
+                }
             }
 
             const description = book.description && book.description.trim() !== '' ? book.description : '';
