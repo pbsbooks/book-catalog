@@ -289,7 +289,7 @@
     <div id="subscribeModal" class="modal-overlay">
         <div class="modal-box">
             <h2 data-en="How to Subscribe" data-am="እንዴት እንደሚመዘገቡ">How to Subscribe</h2>
-            <p data-en="Follow these simple steps to unlock the entire library." data-am="ሙሉ ቤተ-መጽሐፍቱን ለመክፈት እነዚህን ቀላል ደረጃዎች ይከተሉ።">Follow these simple steps to unlock the entire library.</p>
+            <p data-en="Follow these simple steps to unlock the entire library." data-am="ሙሉ ቤተ-መጻሕፍቱን ለመክፈት እነዚህን ቀላል ደረጃዎች ይከተሉ።">Follow these simple steps to unlock the entire library.</p>
             
             <div class="how-it-works">
                 <div class="step-item">
@@ -344,16 +344,13 @@
     </div>
 
     <script>
-        // ==========================================
         // ANTI-THEFT / ANTI-INSPECT PROTECTION
-        // ==========================================
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 'U')) {
                 e.preventDefault(); return false;
             }
         });
-        // ==========================================
 
         // ⚠️ YOUR PYTHONANYWHERE URL
         const API_URL = "https://PBBookstore.pythonanywhere.com";
@@ -468,7 +465,6 @@
                 }
             })
             .catch(err => {
-                console.error("Fetch Error details:", err);
                 alert(`Connection Error:\n${err.message}`);
             })
             .finally(() => { 
@@ -804,7 +800,6 @@
                 setTimeout(startSpotlightAutoScroll, 100);
                 checkURLParams();
             } catch (error) {
-                // SHOW EXACT ERROR ON SCREEN IF IT FAILS
                 document.getElementById('mainContent').innerHTML = `
                     <div class="loader" style="color:#ef4444; max-width: 600px; margin: 0 auto; background: #fff; border: 1px solid #fca5a5; border-radius: 12px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
                         <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; margin-bottom: 10px;"></i> 
@@ -813,7 +808,6 @@
                         <div style="background: #f1f5f9; padding: 10px; border-radius: 8px; margin-top: 15px; font-family: monospace; font-size: 0.85rem; word-wrap: break-word; text-align: left;">
                             <strong>Error Details:</strong><br>${error.message}
                         </div>
-                        <p style="font-size: 0.8rem; margin-top: 15px; color: #64748b;">Check that catalog.json exists in the same folder and has valid JSON syntax (no missing commas).</p>
                     </div>`;
             }
         }
