@@ -289,7 +289,7 @@
     <div id="subscribeModal" class="modal-overlay">
         <div class="modal-box">
             <h2 data-en="How to Subscribe" data-am="እንዴት እንደሚመዘገቡ">How to Subscribe</h2>
-            <p data-en="Follow these simple steps to unlock the entire library." data-am="ሙሉ ቤተ-መጻሕፍቱን ለመክፈት እነዚህን ቀላል ደረጃዎች ይከተሉ።">Follow these simple steps to unlock the entire library.</p>
+            <p data-en="Follow these simple steps to unlock the entire library." data-am="ሙሉ ቤተ-መጽሐፍቱን ለመክፈት እነዚህን ቀላል ደረጃዎች ይከተሉ።">Follow these simple steps to unlock the entire library.</p>
             
             <div class="how-it-works">
                 <div class="step-item">
@@ -344,13 +344,16 @@
     </div>
 
     <script>
+        // ==========================================
         // ANTI-THEFT / ANTI-INSPECT PROTECTION
+        // ==========================================
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 'U')) {
                 e.preventDefault(); return false;
             }
         });
+        // ==========================================
 
         // ⚠️ YOUR PYTHONANYWHERE URL
         const API_URL = "https://PBBookstore.pythonanywhere.com";
@@ -424,56 +427,56 @@
             document.getElementById('subscribeModal').classList.remove('active');
         }
 
-        ffunction verifyAccessCode() {
-    const input = document.getElementById('accessInput').value.trim().toUpperCase();
-    if (!input) return;
+        function verifyAccessCode() {
+            const input = document.getElementById('accessInput').value.trim().toUpperCase();
+            if (!input) return;
 
-    const btn = document.querySelector('#unlockModal .modal-btn');
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
-    btn.disabled = true;
+            const btn = document.querySelector('#unlockModal .modal-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+            btn.disabled = true;
 
-    fetch(`${API_URL}/api/verify_code`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ code: input })
-    })
-    .then(async res => {
-        // Read as text first to catch HTML error pages (like 502 Bad Gateway)
-        const text = await res.text();
-        try {
-            return JSON.parse(text);
-        } catch(e) {
-            throw new Error("Server returned HTML instead of JSON: " + text.substring(0, 50));
+            fetch(`${API_URL}/api/verify_code`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ code: input })
+            })
+            .then(async res => {
+                const text = await res.text();
+                try {
+                    return JSON.parse(text);
+                } catch(e) {
+                    throw new Error("Server returned HTML instead of JSON: " + text.substring(0, 50));
+                }
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    let duration = 30 * 24 * 60 * 60 * 1000;
+                    if (data.tier === 'D') duration = 24 * 60 * 60 * 1000;
+                    else if (data.tier === 'W') duration = 7 * 24 * 60 * 60 * 1000;
+                    
+                    isUnlimited = true;
+                    passExpiry = new Date().getTime() + duration;
+                    localStorage.setItem('pinnahUnlimited', 'true');
+                    localStorage.setItem('pinnahExpiry', passExpiry);
+                    document.getElementById('unlockModal').classList.remove('active');
+                    checkPassState();
+                    renderView();
+                    document.getElementById('accessInput').value = '';
+                } else {
+                    alert(`❌ ${data.message}`);
+                }
+            })
+            .catch(err => {
+                console.error("Fetch Error details:", err);
+                alert(`Connection Error:\n${err.message}`);
+            })
+            .finally(() => { 
+                btn.innerHTML = originalHtml; 
+                btn.disabled = false; 
+            });
         }
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            let duration = 30 * 24 * 60 * 60 * 1000;
-            if (data.tier === 'D') duration = 24 * 60 * 60 * 1000;
-            else if (data.tier === 'W') duration = 7 * 24 * 60 * 60 * 1000;
-            
-            isUnlimited = true;
-            passExpiry = new Date().getTime() + duration;
-            localStorage.setItem('pinnahUnlimited', 'true');
-            localStorage.setItem('pinnahExpiry', passExpiry);
-            document.getElementById('unlockModal').classList.remove('active');
-            checkPassState();
-            renderView();
-            document.getElementById('accessInput').value = '';
-        } else {
-            alert(`❌ ${data.message}`);
-        }
-    })
-    .catch(err => {
-        console.error("Fetch Error details:", err);
-        alert(`Connection Error:\n${err.message}`);
-    })
-    .finally(() => { 
-        btn.innerHTML = originalHtml; 
-        btn.disabled = false; 
-    });
-}
+
         function openKindleReaderById(id) {
             const book = allBooks.find(b => b.id == id);
             if (book) openKindleReader(book);
@@ -755,12 +758,17 @@
 
         async function initApp() {
             try {
+                document.getElementById('mainContent').innerHTML = `<div class="loader"><i class="fa-solid fa-spinner fa-spin"></i> Loading archive...</div>`;
+                
                 const response = await fetch('catalog.json');
+                if (!response.ok) throw new Error(`catalog.json not found (Status: ${response.status})`);
+                
                 const rawData = await response.json();
+                
                 try {
                     const linkRes = await fetch('drive_links.json?v=' + new Date().getTime());
                     driveLinks = await linkRes.json();
-                } catch(e) { console.log("No drive_links.json found"); }
+                } catch(e) { console.log("No drive_links.json found or invalid format."); }
 
                 allBooks = rawData.map((b, index) => {
                     const id = b['Book ID'] || b.id || index + 1;
@@ -796,7 +804,17 @@
                 setTimeout(startSpotlightAutoScroll, 100);
                 checkURLParams();
             } catch (error) {
-                document.getElementById('mainContent').innerHTML = `<div class="loader" style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to load <strong>catalog.json</strong>.</div>`;
+                // SHOW EXACT ERROR ON SCREEN IF IT FAILS
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="loader" style="color:#ef4444; max-width: 600px; margin: 0 auto; background: #fff; border: 1px solid #fca5a5; border-radius: 12px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; margin-bottom: 10px;"></i> 
+                        <h3 style="color: #ef4444;">Failed to load library data</h3>
+                        <p style="color: #64748b; margin-top: 10px;">There is a problem with your <strong>catalog.json</strong> file.</p>
+                        <div style="background: #f1f5f9; padding: 10px; border-radius: 8px; margin-top: 15px; font-family: monospace; font-size: 0.85rem; word-wrap: break-word; text-align: left;">
+                            <strong>Error Details:</strong><br>${error.message}
+                        </div>
+                        <p style="font-size: 0.8rem; margin-top: 15px; color: #64748b;">Check that catalog.json exists in the same folder and has valid JSON syntax (no missing commas).</p>
+                    </div>`;
             }
         }
 
