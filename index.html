@@ -7,7 +7,6 @@
     <title>Pinnah Books | Digital Bookstore in Ethiopia | ፒናህ የመጽሐፍት መደብር</title>
     
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
-    <link rel="preload" as="image" href="Home-page.png" fetchpriority="high">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;900&display=swap" rel="stylesheet">
@@ -26,40 +25,49 @@
             --shadow-sm:0 1px 3px rgba(0,0,0,0.3); --shadow-lg:0 10px 25px -5px rgba(0,0,0,0.5);
         }
         * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; }
-        body { background:var(--bg-color); color:var(--text-main); -webkit-font-smoothing:antialiased; transition:var(--transition); }
+        body { background:var(--bg-color); color:var(--text-main); -webkit-font-smoothing:antialiased; transition:var(--transition); user-select: none; -webkit-user-select: none; }
         h1,h2,h3 { font-family:'Playfair Display',serif; color:var(--primary); }
 
-        /* === PINNAH UNLIMITED STYLES === */
         .unlimited-banner { background: linear-gradient(90deg, #0b3154, #1e4d7b); color: white; text-align: center; padding: 12px; font-weight: 600; font-size: 0.95rem; display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; z-index: 101; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .unlimited-banner a { background: var(--accent); color: var(--primary); padding: 8px 20px; border-radius: 30px; text-decoration: none; font-weight: 800; font-size: 0.85rem; transition: var(--transition); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(212,175,55,0.3); }
+        .unlimited-banner a { background: var(--accent); color: var(--primary); padding: 8px 20px; border-radius: 30px; text-decoration: none; font-weight: 800; font-size: 0.85rem; transition: var(--transition); display: flex; align-items: center; gap: 8px; }
         .unlimited-banner a:hover { background: #fff; transform: translateY(-2px); }
         .unlimited-timer { background: #fff3cd; color: #856404; padding: 10px; text-align: center; font-weight: 600; font-size: 0.9rem; display: none; z-index: 101; position: relative; }
         body.dark-mode .unlimited-timer { background: #332701; color: #ffda6a; }
         
-        /* Kindle Reader Overlay */
         .kindle-reader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; z-index: 10000; flex-direction: column; }
         .kindle-reader.active { display: flex; }
-        .kindle-header { background: #222; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .kindle-header { background: #222; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 2; position: relative;}
         .kindle-header h3 { color: #fff; font-size: 1.2rem; margin: 0; }
         .kindle-close { background: transparent; border: none; color: #ff5252; font-size: 1.5rem; cursor: pointer; }
-        .kindle-frame { flex: 1; width: 100%; border: none; background: #1a1a1a; }
+        .kindle-wrapper { flex: 1; width: 100%; position: relative; display: flex; background: #1a1a1a; overflow: hidden; }
+        .kindle-frame { flex: 1; width: 100%; height: 100%; border: none; background: #1a1a1a; }
+        .popout-blocker { position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: transparent; z-index: 10; cursor: default; }
 
-        /* Unlock Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 10001; align-items: center; justify-content: center; }
         .modal-overlay.active { display: flex; }
-        .modal-box { background: var(--surface); padding: 2.5rem 2rem; border-radius: 20px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border); }
-        .modal-box h2 { font-size: 2rem; margin-bottom: 5px; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .modal-box { background: var(--surface); padding: 2.5rem 2rem; border-radius: 20px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .modal-box h2 { font-size: 1.8rem; margin-bottom: 5px; color: var(--primary); }
         .modal-box p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem; line-height: 1.5; }
-        .modal-input { width: 100%; padding: 1.2rem; margin: 1rem 0; border: 2px solid var(--border); border-radius: 12px; font-size: 1.2rem; text-align: center; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; background: var(--bg-color); color: var(--text-main); transition: var(--transition); }
+        .modal-input { width: 100%; padding: 1.2rem; margin: 1rem 0; border: 2px solid var(--border); border-radius: 12px; font-size: 1.1rem; text-align: center; background: var(--bg-color); color: var(--text-main); text-transform: uppercase; }
         .modal-input:focus { border-color: var(--accent); outline: none; }
-        .modal-btn { width: 100%; padding: 1.1rem; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .modal-btn:hover { background: var(--accent); color: var(--primary); transform: translateY(-2px); }
-        .modal-btn-secondary { width: 100%; padding: 1.1rem; background: transparent; color: var(--primary); border: 2px solid var(--primary); border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .modal-btn-secondary:hover { background: var(--primary); color: #fff; }
+        .modal-btn { width: 100%; padding: 1.1rem; background: var(--primary); color: #fff; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transition); }
+        .modal-btn:hover { background: var(--accent); color: var(--primary); }
         .btn-unlock { background: var(--accent); color: var(--primary); border-color: var(--accent); display: flex; gap: 5px; align-items: center; }
-        /* =============================== */
 
-        nav { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 30px rgba(0,0,0,0.03); transition: background 0.3s ease; }
+        /* How it Works Steps */
+        .how-it-works { text-align: left; background: var(--bg-color); border-radius: 12px; padding: 15px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .step-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+        .step-item:last-child { margin-bottom: 0; }
+        .step-icon { width: 28px; height: 28px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; flex-shrink: 0; }
+        .step-text { font-size: 0.9rem; color: var(--text-main); line-height: 1.4; margin-top: 4px; }
+
+        .pricing-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .price-card { border: 2px solid var(--border); border-radius: 12px; padding: 15px; cursor: pointer; transition: var(--transition); text-align: left; display: flex; justify-content: space-between; align-items: center; background: var(--surface); }
+        .price-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .price-card h4 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 3px; }
+        .price-card span { font-size: 1.2rem; font-weight: 800; color: var(--primary); }
+
+        nav { background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 30px rgba(0,0,0,0.03); }
         body.dark-mode nav { background: rgba(15, 23, 42, 0.35); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
         .brand { font-size:1.5rem; font-weight:700; color:var(--primary); text-decoration:none; display:flex; align-items:center; gap:10px; font-family:'Playfair Display',serif; cursor:pointer; }
         .brand img { height:40px; border-radius:0; }
@@ -79,8 +87,7 @@
         .hero-title { font-family: 'Great Vibes', cursive; font-size: 4.2rem; font-weight: 400; line-height: 1.1; text-shadow: 0 4px 12px rgba(0,0,0,0.5); margin: 0; color: #c9b896; }
         .hero-tagline { font-size:1.1rem; color:#e2e8f0; max-width:600px; margin-bottom:2rem; text-shadow:0 2px 8px rgba(0,0,0,0.5); }
         .search-container { width:100%; max-width:600px; position:relative; }
-        .search-input { width:100%; padding:1rem 1.5rem 1rem 3.2rem; font-size:1rem; border:none; border-radius:50px; box-shadow:0 10px 30px rgba(0,0,0,0.2); outline:none; background:rgba(255,255,255,0.95); color:#0b3154; transition:all 0.3s ease; }
-        .search-input:focus { background:#fff; box-shadow:0 15px 35px rgba(0,0,0,0.3); }
+        .search-input { width:100%; padding:1rem 1.5rem 1rem 3.2rem; font-size:1rem; border:none; border-radius:50px; box-shadow:0 10px 30px rgba(0,0,0,0.2); outline:none; background:rgba(255,255,255,0.95); color:#0b3154; }
         .search-icon { position:absolute; left:1.2rem; top:50%; transform:translateY(-50%); color:var(--primary); font-size:1.1rem; z-index:3; }
         .search-clear { position:absolute; right:1.2rem; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#64748b; font-size:1.1rem; display:none; z-index:3; }
         .search-clear.show { display:block; }
@@ -111,7 +118,7 @@
         .book-grid .flip-card { width: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .book-grid .flip-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
         
-        .flip-card { background-color: transparent; perspective: 1000px; cursor: pointer; height: 460px; }
+        .flip-card { background-color: transparent; perspective: 1000px; cursor: pointer; height: 490px; }
         .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
         .flip-card-front, .flip-card-back { backface-visibility: hidden; border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; position: absolute; top:0; left:0; width:100%; height:100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -142,6 +149,12 @@
 
         .btn-order { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: var(--primary); color: #fff; padding: 0.75rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: var(--transition); border: none; cursor: pointer; }
         .btn-order:hover { background: var(--accent); color: var(--primary); }
+
+        .btn-print { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #f3f4f6; color: var(--text-main); border: 1px solid var(--border); padding: 0.75rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: var(--transition); cursor: pointer; }
+        .btn-print:hover { background: #e5e7eb; border-color: #d1d5db; }
+        body.dark-mode .btn-print { background: #374151; color: #fff; border-color: #4b5563; }
+        body.dark-mode .btn-print:hover { background: #4b5563; }
+
         .pagination { display:flex; justify-content:center; align-items:center; gap:1rem; margin-top:4rem; }
         .btn-page { padding:0.8rem 1.5rem; background:var(--surface); border:1px solid var(--border); border-radius:50px; cursor:pointer; font-weight:600; color:var(--primary); transition:var(--transition); }
         .btn-page:hover:not(:disabled) { background:var(--primary); color:#fff; }
@@ -165,32 +178,22 @@
         .spotlight-arrow:hover { background: var(--primary); color: #fff; }
 
         .support-widget { position: fixed; bottom: 2rem; right: 2rem; z-index: 998; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .support-toggle { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, rgba(11,49,84,0.92), rgba(15,64,110,0.85)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); color: #fff; border: 1px solid rgba(255,255,255,0.25); cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 8px 32px rgba(11,49,84,0.4), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 0 rgba(212,175,55,0.5); animation: supportGlow 3s infinite; }
-        @keyframes supportGlow { 0%, 100% { box-shadow: 0 8px 32px rgba(11,49,84,0.4), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 0 rgba(212,175,55,0.5); } 50% { box-shadow: 0 8px 32px rgba(11,49,84,0.4), inset 0 1px 0 rgba(255,255,255,0.2), 0 0 0 12px rgba(212,175,55,0); } }
-        .support-toggle::after { content: ''; position: absolute; top: 3px; right: 3px; width: 14px; height: 14px; background: #22c55e; border-radius: 50%; border: 2px solid rgba(255,255,255,0.9); animation: supportPulse 2s infinite; }
-        @keyframes supportPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.85; } }
-        .support-toggle:hover { transform: scale(1.1) rotate(5deg); background: linear-gradient(135deg, rgba(212,175,55,0.95), rgba(184,148,32,0.9)); color: var(--primary); border-color: rgba(255,255,255,0.5); }
-        .support-toggle.active { transform: rotate(90deg); background: linear-gradient(135deg, rgba(212,175,55,0.95), rgba(184,148,32,0.9)); color: var(--primary); border-color: rgba(255,255,255,0.6); }
-        .support-menu { position: absolute; bottom: 82px; right: 0; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.55); border-radius: 20px; box-shadow: 0 20px 50px rgba(11,49,84,0.25), inset 0 1px 0 rgba(255,255,255,0.5); padding: 0.85rem; min-width: 285px; display: none; flex-direction: column; gap: 0.35rem; overflow: hidden; }
-        body.dark-mode .support-menu { background: rgba(30, 41, 59, 0.75); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
-        .support-menu.open { display: flex; animation: supportSlide 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes supportSlide { from { opacity: 0; transform: translateY(15px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .support-menu .support-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; color: var(--text-muted); padding: 0.4rem 0.75rem 0.6rem; border-bottom: 1px solid rgba(0,0,0,0.06); margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.5rem; }
-        body.dark-mode .support-menu .support-title { border-bottom: 1px solid rgba(255,255,255,0.08); }
-        .support-menu .support-title::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px rgba(34,197,94,0.8); }
-        .support-menu a { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 0.85rem; border-radius: 14px; text-decoration: none; color: var(--text-main); transition: all 0.25s ease; border: 1px solid transparent; }
-        .support-menu a:hover { background: rgba(255,255,255,0.6); border-color: rgba(212,175,55,0.4); transform: translateX(-4px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        body.dark-mode .support-menu a:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,175,55,0.35); }
-        .support-menu .support-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.15rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .support-menu .support-icon.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
-        .support-menu .support-icon.blue { background: linear-gradient(135deg, #3fc7f7, #229ED9); }
-        .support-menu .support-info { display: flex; flex-direction: column; line-height: 1.3; text-align: left; }
-        .support-menu .support-label { font-size: 0.95rem; font-weight: 700; color: var(--text-main); }
-        .support-menu .support-sub { font-size: 0.78rem; font-weight: 500; color: var(--text-muted); }
+        .support-toggle { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, rgba(11,49,84,0.92), rgba(15,64,110,0.85)); backdrop-filter: blur(14px); color: #fff; border: 1px solid rgba(255,255,255,0.25); cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(11,49,84,0.4); }
+        .support-toggle.active { transform: rotate(90deg); background: linear-gradient(135deg, rgba(212,175,55,0.95), rgba(184,148,32,0.9)); color: var(--primary); }
+        .support-menu { position: absolute; bottom: 82px; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(24px); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); padding: 0.85rem; min-width: 285px; display: none; flex-direction: column; gap: 0.35rem; }
+        body.dark-mode .support-menu { background: rgba(30, 41, 59, 0.95); }
+        .support-menu.open { display: flex; }
+        .support-menu a { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem; border-radius: 14px; text-decoration: none; color: var(--text-main); }
+        .support-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; }
+        .support-icon.green { background: #22c55e; }
+        .support-icon.blue { background: #229ED9; }
+        .support-info { display: flex; flex-direction: column; }
+        .support-label { font-size: 0.95rem; font-weight: 700; }
+        .support-sub { font-size: 0.78rem; color: var(--text-muted); }
 
         @media (max-width:768px) {
             .hero { padding: 1.5rem 5% 3rem; } .hero-logo { width: 80px; } .hero-title { font-size: 3rem; } .hero-tagline { font-size: 1rem; }
-            .flip-card { height: 440px; } .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
+            .flip-card { height: 480px; } .horizontal-scroll .flip-card { flex: 0 0 200px; min-width: 200px; max-width: 200px; }
             .support-widget { bottom: 1.2rem; right: 1.2rem; } .support-toggle { width: 56px; height: 56px; font-size: 1.3rem; }
             .support-menu { min-width: 260px; bottom: 72px; } #backToTop { bottom: 1.2rem; left: 1.2rem; width: 46px; height: 46px; }
             .nav-actions { gap: 0.4rem; } .btn-outline { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
@@ -200,13 +203,11 @@
 </head>
 <body>
 
-    <!-- Unlimited Banner -->
     <div id="unlimitedBanner" class="unlimited-banner" style="display:none;">
-        <span data-en="👑 Pinnah Unlimited: Day 24.99 ETB | Week 100 ETB | Month 300 ETB." data-am="👑 ፒናህ አንሊሚትድ፡ የቀን 24.99 ብር | የሳምንት 100 ብር | የወር 300 ብር።">👑 <strong>Pinnah Unlimited:</strong> Day 24.99 ETB | Week 100 ETB | Month 300 ETB.</span>
-        <a href="https://t.me/PBSA001?text=Hello%2C%20I%20want%20to%20subscribe%20to%20Pinnah%20Unlimited.%20Please%20send%20me%20a%20pass." target="_blank" data-en="Message Concierge" data-am="መልእክት ይላኩ"><i class="fa-brands fa-telegram"></i> Message Concierge</a>
+        <span data-en="👑 Pinnah Unlimited: Day 24.99 ETB | Week 99.99 ETB | Month 299.99 ETB." data-am="👑 ፒናህ አንሊሚትድ፡ የቀን 24.99 ብር | የሳምንት 99.99 ብር | የወር 299.99 ብር።">👑 <strong>Pinnah Unlimited:</strong> Day 24.99 ETB | Week 99.99 ETB | Month 299.99 ETB.</span>
+        <a href="#" onclick="openSubscribeModal()" data-en="Subscribe Now" data-am="አሁን ይመዝገቡ"><i class="fa-solid fa-crown"></i> Subscribe Now</a>
     </div>
     
-    <!-- Timer Banner -->
     <div id="unlimitedTimer" class="unlimited-timer">
         ⏳ Pinnah Unlimited: <span id="timerText">Calculating...</span>
     </div>
@@ -217,9 +218,7 @@
             <button class="btn-outline" id="themeToggle" onclick="toggleTheme()" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
             <button class="btn-outline" id="langToggle" onclick="toggleLang()">🌐 አማርኛ</button>
             <button class="btn-outline btn-unlock" id="unlockBtn" onclick="promptUnlock()"><i class="fa-solid fa-key"></i> <span data-en="Unlock" data-am="ክፈት">Unlock</span></button>
-            <a href="https://t.me/pinnah_book_store_1" target="_blank" class="btn-outline" style="background:var(--primary); color:#fff; padding:0.5rem 0.7rem;" aria-label="Join Channel">
-                <i class="fa-brands fa-telegram" style="font-size:1.4rem;"></i>
-            </a>
+            <a href="https://t.me/pinnah_book_store_1" target="_blank" class="btn-outline" style="background:var(--primary); color:#fff; padding:0.5rem 0.7rem;" aria-label="Join Channel"><i class="fa-brands fa-telegram" style="font-size:1.4rem;"></i></a>
         </div>
     </nav>
 
@@ -279,32 +278,84 @@
     <div id="unlockModal" class="modal-overlay">
         <div class="modal-box">
             <h2 data-en="👑 Pinnah Unlimited" data-am="👑 ፒናህ አንሊሚትድ">👑 Pinnah Unlimited</h2>
-            <p data-en="Enter your access code below to read the library instantly. Don't have one? Request a pass from our concierge." data-am="መጻሕፍትን በቅጽበት ለማንበብ የመግቢያ ኮድዎን ከታች ያስገቡ። ኮድ የለዎትም? ከደንበኛ አገልግሎታችን ፓስ ይጠይቁ።">Enter your access code below to read the library instantly. Don't have one? Request a pass from our concierge.</p>
-            
+            <p data-en="Enter your access code below. If you don't have one, click Subscribe to get started." data-am="የመግቢያ ኮድዎን ከታች ያስገቡ። ኮድ ከሌለዎት ለመጀመር 'ይመዝገቡ' የሚለውን ይጫኑ።">Enter your access code below. If you don't have one, click Subscribe to get started.</p>
             <input type="text" id="accessInput" class="modal-input" placeholder="PIN-XXXX">
-            
-            <button class="modal-btn" onclick="verifyAccessCode()">
-                <i class="fa-solid fa-unlock"></i> <span data-en="Unlock Library" data-am="ቤተ-መጻሕፍቱን ክፈት">Unlock Library</span>
-            </button>
-            
-            <button class="modal-btn-secondary" onclick="requestPass()">
-                <i class="fa-brands fa-telegram"></i> <span data-en="Request Pass via Concierge" data-am="ከደንበኛ አገልግሎት ፓስ ይጠይቁ">Request Pass via Concierge</span>
-            </button>
-            
-            <button onclick="document.getElementById('unlockModal').classList.remove('active')" style="background:none; border:none; margin-top:20px; color:#ef4444; font-weight:600; cursor:pointer; font-size:0.9rem;" data-en="Cancel" data-am="ሰርዝ">Cancel</button>
+            <button class="modal-btn" onclick="verifyAccessCode()"><i class="fa-solid fa-unlock"></i> <span data-en="Unlock Library" data-am="ቤተ-መጻሕፍቱን ክፈት">Unlock Library</span></button>
+            <button class="modal-btn-secondary" onclick="document.getElementById('unlockModal').classList.remove('active'); openSubscribeModal()" style="background:var(--primary); color:#fff; border:none; margin-top:10px;"><i class="fa-solid fa-crown"></i> <span data-en="Subscribe / Get Pass" data-am="ይመዝገቡ / ፓስ ያግኙ">Subscribe / Get Pass</span></button>
+            <button onclick="document.getElementById('unlockModal').classList.remove('active')" style="background:none; border:none; margin-top:15px; color:#ef4444; font-weight:600; cursor:pointer;" data-en="Cancel" data-am="ሰርዝ">Cancel</button>
         </div>
     </div>
 
-    <!-- Kindle Reader Overlay -->
+    <!-- Subscribe Modal (With How it Works Steps) -->
+    <div id="subscribeModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 data-en="How to Subscribe" data-am="እንዴት እንደሚመዘገቡ">How to Subscribe</h2>
+            <p data-en="Follow these simple steps to unlock the entire library." data-am="ሙሉ ቤተ-መጻሕፍቱን ለመክፈት እነዚህን ቀላል ደረጃዎች ይከተሉ።">Follow these simple steps to unlock the entire library.</p>
+            
+            <div class="how-it-works">
+                <div class="step-item">
+                    <div class="step-icon">1</div>
+                    <div class="step-text" data-en="Select your preferred plan below." data-am="ከታች የሚፈልጉትን እቅድ ይምረጡ።">Select your preferred plan below.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">2</div>
+                    <div class="step-text" data-en="You will be redirected to Telegram." data-am="ወደ ቴሌግራም ይመራዎታል።">You will be redirected to Telegram.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">3</div>
+                    <div class="step-text" data-en="Pay via Telebirr and send the screenshot." data-am="በቴሌብር ይክፈሉ እና ስክሪንሾቱን ይላኩ።">Pay via Telebirr and send the screenshot.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">4</div>
+                    <div class="step-text" data-en="Receive your access code instantly." data-am="የመግቢያ ኮድዎን በቅጽበት ይቀበላሉ።">Receive your access code instantly.</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-icon">5</div>
+                    <div class="step-text" data-en="Enter the code here to read." data-am="ለማንበብ ኮዱን እዚህ ያስገቡ።">Enter the code here to read.</div>
+                </div>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="price-card" onclick="requestPass('sub_D', 'Day Pass')">
+                    <div><h4 data-en="Day Pass" data-am="የቀን ፓስ">Day Pass</h4><span>24.99 ETB</span></div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+                <div class="price-card" onclick="requestPass('sub_W', 'Week Pass')">
+                    <div><h4 data-en="Week Pass" data-am="የሳምንት ፓስ">Week Pass</h4><span>99.99 ETB</span></div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+                <div class="price-card" onclick="requestPass('sub_M', 'Month Pass')">
+                    <div><h4 data-en="Month Pass" data-am="የወር ፓስ">Month Pass</h4><span>299.99 ETB</span></div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+            <button onclick="document.getElementById('subscribeModal').classList.remove('active')" style="background:none; border:none; margin-top:15px; color:#ef4444; font-weight:600; cursor:pointer;" data-en="Cancel" data-am="ሰርዝ">Cancel</button>
+        </div>
+    </div>
+
     <div id="kindleReader" class="kindle-reader">
         <div class="kindle-header">
             <h3 id="kindleTitle">Reading...</h3>
             <button class="kindle-close" onclick="closeKindleReader()"><i class="fa-solid fa-xmark"></i> Close</button>
         </div>
-        <iframe id="kindleFrame" class="kindle-frame" src=""></iframe>
+        <div class="kindle-wrapper">
+            <iframe id="kindleFrame" class="kindle-frame" src="" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            <div class="popout-blocker"></div>
+        </div>
     </div>
 
     <script>
+        // ANTI-THEFT / ANTI-INSPECT PROTECTION
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault(); return false;
+            }
+        });
+
+        // ⚠️ YOUR PYTHONANYWHERE URL
+        const API_URL = "https://PBBookstore.pythonanywhere.com";
+
         const BOT_USERNAME = "Pinnah_Books_Order_Bot";
         const TELEGRAM_CONTACT = "PBSA001";
         const BOOKS_PER_PAGE = 24;
@@ -322,17 +373,6 @@
         let driveLinks = {};
         let isUnlimited = localStorage.getItem('pinnahUnlimited') === 'true';
         let passExpiry = parseInt(localStorage.getItem('pinnahExpiry')) || 0;
-        let validCodes = [];
-
-        async function loadCodes() {
-            try {
-                const res = await fetch('codes.txt?v=' + new Date().getTime());
-                if (res.ok) {
-                    const text = await res.text();
-                    validCodes = text.split('\n').map(c => c.trim()).filter(c => c.length > 0);
-                }
-            } catch(e) { console.log("No codes.txt found"); }
-        }
 
         function checkPassState() {
             const banner = document.getElementById('unlimitedBanner');
@@ -342,15 +382,13 @@
             if (isUnlimited) {
                 const now = new Date().getTime();
                 const diff = passExpiry - now;
-                
                 if (diff <= 0) {
                     isUnlimited = false;
                     localStorage.removeItem('pinnahUnlimited');
                     banner.style.display = 'flex';
                     timer.style.display = 'none';
                     unlockBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span data-en="Unlock" data-am="ክፈት">Unlock</span>';
-                    unlockBtn.style.background = 'var(--accent)';
-                    unlockBtn.style.color = 'var(--primary)';
+                    unlockBtn.style.background = 'var(--accent)'; unlockBtn.style.color = 'var(--primary)';
                 } else {
                     banner.style.display = 'none';
                     timer.style.display = 'block';
@@ -362,15 +400,13 @@
                         document.getElementById('timerText').innerText = `${hours} hours, ${mins} mins left.`;
                     }
                     unlockBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span data-en="Active" data-am="ንቁ">Active</span>';
-                    unlockBtn.style.background = '#22c55e';
-                    unlockBtn.style.color = '#fff';
+                    unlockBtn.style.background = '#22c55e'; unlockBtn.style.color = '#fff';
                 }
             } else {
                 banner.style.display = 'flex';
                 timer.style.display = 'none';
                 unlockBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span data-en="Unlock" data-am="ክፈት">Unlock</span>';
-                unlockBtn.style.background = 'var(--accent)';
-                unlockBtn.style.color = 'var(--primary)';
+                unlockBtn.style.background = 'var(--accent)'; unlockBtn.style.color = 'var(--primary)';
             }
         }
 
@@ -380,33 +416,50 @@
             document.getElementById('accessInput').focus();
         }
 
-        function requestPass() {
-            const msg = isAmharic 
-                ? "ሰላም፣ የፒናህ አንሊሚትድ ፓስ ማግኘት እፈልጋለሁ። እባክዎ የመግቢያ ኮድ ይላኩልኝ።" 
-                : "Hello, I would like to get a Pinnah Unlimited pass. Please send me an access code.";
-            window.open(`https://t.me/${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
+        function openSubscribeModal() {
+            document.getElementById('subscribeModal').classList.add('active');
+        }
+
+        function requestPass(planCode, planName) {
+            window.open(`https://t.me/${BOT_USERNAME}?start=${planCode}`, '_blank');
+            document.getElementById('subscribeModal').classList.remove('active');
         }
 
         function verifyAccessCode() {
             const input = document.getElementById('accessInput').value.trim().toUpperCase();
-            if (validCodes.includes(input) || input === 'PIN-FREE') {
-                let duration = 30 * 24 * 60 * 60 * 1000;
-                if (input.startsWith('PIN-D-') || input === 'PIN-FREE') duration = 24 * 60 * 60 * 1000;
-                else if (input.startsWith('PIN-W-')) duration = 7 * 24 * 60 * 60 * 1000;
-                
-                isUnlimited = true;
-                passExpiry = new Date().getTime() + duration;
-                localStorage.setItem('pinnahUnlimited', 'true');
-                localStorage.setItem('pinnahExpiry', passExpiry);
-                document.getElementById('unlockModal').classList.remove('active');
-                checkPassState();
-                renderView();
-                
-                // Clear input
-                document.getElementById('accessInput').value = '';
-            } else {
-                alert(isAmharic ? "❌ ልክ ያልሆነ ኮድ። እባክዎ ያረጋግጡ ወይም መልእክት ይላኩ።" : "❌ Invalid code. Please check your code or message our concierge bot.");
-            }
+            if (!input) return;
+
+            const btn = document.querySelector('#unlockModal .modal-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+            btn.disabled = true;
+
+            fetch(`${API_URL}/api/verify_code`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ code: input })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    let duration = 30 * 24 * 60 * 60 * 1000;
+                    if (data.tier === 'D') duration = 24 * 60 * 60 * 1000;
+                    else if (data.tier === 'W') duration = 7 * 24 * 60 * 60 * 1000;
+                    
+                    isUnlimited = true;
+                    passExpiry = new Date().getTime() + duration;
+                    localStorage.setItem('pinnahUnlimited', 'true');
+                    localStorage.setItem('pinnahExpiry', passExpiry);
+                    document.getElementById('unlockModal').classList.remove('active');
+                    checkPassState();
+                    renderView();
+                    document.getElementById('accessInput').value = '';
+                } else {
+                    alert(`❌ ${data.message}`);
+                }
+            })
+            .catch(err => alert("Connection error. Please try again in 10 seconds."))
+            .finally(() => { btn.innerHTML = originalHtml; btn.disabled = false; });
         }
 
         function openKindleReaderById(id) {
@@ -423,7 +476,7 @@
             } else {
                 const message = encodeURIComponent(`Hello, I have an active Pinnah Unlimited pass. I would like to read: "${book.title}" (ID: ${book.id}). Please upload it.`);
                 window.open(`https://t.me/${TELEGRAM_CONTACT}?text=${message}`, '_blank');
-                alert(isAmharic ? "ይህ መጽሐፍ በቪልታችን ውስጥ ነው። ቴሌግራም ከፍተናል—እባክዎ መልእክቱን ይላኩ፣ ወኪላችን ያደርስልዎታል።" : "This book is in our vault. We have opened Telegram—please press send, and our agent will deliver it to you.");
+                alert(isAmharic ? "ይህ መጽሐፍ በቪልታችን ውስጥ ነው። ቴሌግራም ከፍተናል—እባክዎ መልእክቱን ይላኩ።" : "This book is in our vault. We have opened Telegram—please press send, and our agent will deliver it to you.");
             }
         }
 
@@ -595,6 +648,11 @@
 
         function formatPages(value) { return sanitizeNumber(value); }
         function buildBotLink(book) { return `https://t.me/${BOT_USERNAME}?start=${book.id}`; }
+        
+        // NEW: Build link for Print on Demand
+        function buildPrintLink(book) { 
+            return `https://t.me/${BOT_USERNAME}?start=print_${book.id}`; 
+        }
 
         function openLightbox(imageSrc) {
             document.getElementById('lightbox-img').src = imageSrc;
@@ -603,9 +661,19 @@
 
         function flipCardHTML(book) {
             const orderText = isAmharic ? 'ግዛ' : 'Buy Now';
+            const printText = isAmharic ? 'የታተመ ቅጂ ይዘዙ' : 'Order Hard Copy';
             const safeImage = encodeURI(book.image);
             const botLink = buildBotLink(book);
+            const printLink = buildPrintLink(book);
             const priceDisplay = formatPrice(book.price);
+            
+            // Calculate 6x price for print
+            let printPriceDisplay = "Contact Us";
+            const numPrice = parseFloat(book.price);
+            if (!isNaN(numPrice)) {
+                printPriceDisplay = (numPrice * 6).toFixed(2) + " ETB";
+            }
+
             const description = book.description && book.description.trim() !== '' ? book.description : '';
             const metaItems = [
                 { label: isAmharic ? 'ቋንቋ' : 'Language', value: book.language },
@@ -661,7 +729,10 @@
                                     <i class="fa-solid ${readBtnIcon}"></i> ${readBtnText}
                                 </button>
                                 <a href="${botLink}" target="_blank" class="btn-order" onclick="event.stopPropagation()">
-                                    <i class="fa-brands fa-telegram"></i> ${orderText}
+                                    <i class="fa-brands fa-telegram"></i> ${orderText} (Digital)
+                                </a>
+                                <a href="${printLink}" target="_blank" class="btn-print" onclick="event.stopPropagation()" title="${printPriceDisplay}">
+                                    <i class="fa-solid fa-box"></i> ${printText} - ${printPriceDisplay}
                                 </a>
                             </div>
                         </div>
@@ -670,7 +741,6 @@
         }
 
         async function initApp() {
-            await loadCodes();
             try {
                 const response = await fetch('catalog.json');
                 const rawData = await response.json();
