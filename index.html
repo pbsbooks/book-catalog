@@ -378,14 +378,13 @@
             const timer = document.getElementById('unlimitedTimer');
             const unlockBtn = document.getElementById('unlockBtn');
 
-            // NEW: Check if revoked by admin
+            // Check if revoked by admin
             const savedChatId = localStorage.getItem('pinnahChatId');
             if (savedChatId && isUnlimited) {
                 fetch(`${API_URL}/api/check_status?chat_id=${savedChatId}`)
                 .then(res => res.json())
                 .then(data => {
                     if (!data.active) {
-                        // KICK THEM OUT
                         localStorage.removeItem('pinnahUnlimited');
                         localStorage.removeItem('pinnahExpiry');
                         localStorage.removeItem('pinnahChatId');
@@ -476,7 +475,7 @@
                     passExpiry = new Date().getTime() + duration;
                     localStorage.setItem('pinnahUnlimited', 'true');
                     localStorage.setItem('pinnahExpiry', passExpiry);
-                    localStorage.setItem('pinnahChatId', data.chat_id); // <-- NEW: Save chat ID
+                    localStorage.setItem('pinnahChatId', data.chat_id); // Save chat ID
                     
                     document.getElementById('unlockModal').classList.remove('active');
                     checkPassState();
