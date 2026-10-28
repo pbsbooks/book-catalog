@@ -378,31 +378,12 @@
             const timer = document.getElementById('unlimitedTimer');
             const unlockBtn = document.getElementById('unlockBtn');
 
-            // Check if revoked by admin
-            const savedChatId = localStorage.getItem('pinnahChatId');
-            if (savedChatId && isUnlimited) {
-                fetch(`${API_URL}/api/check_status?chat_id=${savedChatId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.active) {
-                        localStorage.removeItem('pinnahUnlimited');
-                        localStorage.removeItem('pinnahExpiry');
-                        localStorage.removeItem('pinnahChatId');
-                        isUnlimited = false;
-                        passExpiry = 0;
-                        alert("Your access has been revoked by the admin.");
-                        checkPassState(); // Update UI
-                    }
-                }).catch(e => console.log("Status check failed"));
-            }
-
             if (isUnlimited) {
                 const now = new Date().getTime();
                 const diff = passExpiry - now;
                 if (diff <= 0) {
                     isUnlimited = false;
                     localStorage.removeItem('pinnahUnlimited');
-                    localStorage.removeItem('pinnahChatId');
                     banner.style.display = 'flex';
                     timer.style.display = 'none';
                     unlockBtn.innerHTML = '<i class="fa-solid fa-key"></i> <span data-en="Unlock" data-am="ክፈት">Unlock</span>';
@@ -475,8 +456,6 @@
                     passExpiry = new Date().getTime() + duration;
                     localStorage.setItem('pinnahUnlimited', 'true');
                     localStorage.setItem('pinnahExpiry', passExpiry);
-                    localStorage.setItem('pinnahChatId', data.chat_id); // Save chat ID
-                    
                     document.getElementById('unlockModal').classList.remove('active');
                     checkPassState();
                     renderView();
